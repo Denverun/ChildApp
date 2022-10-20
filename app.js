@@ -37,7 +37,7 @@ app.use(express.static("public"));
 
 
 app.use(session({
-  secret: SECRET,
+  secret: "Test",
   resave: false,
   saveUninitialized: false
 }));
@@ -1334,4 +1334,20 @@ wordAnswer.save(function(err){
 
 app.listen(process.env.PORT, function() {
   console.log("Server has started successfully");
+});
+
+
+const http = require('http');
+
+const hostname = '127.0.0.1';
+const port = 3000;
+
+const server = http.createServer((req, res) => {
+  res.statusCode = 200;
+  res.setHeader('Content-Type', 'text/plain');
+  res.end('Hello World');
+});
+
+server.listen(port, hostname, () => {
+  console.log(`Server running at http://${hostname}:${port}/`);
 });
