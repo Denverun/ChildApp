@@ -1,7 +1,7 @@
 //jshint esversion:6
-require ("dotenv").config();
+require ("dotenv").config();      //créer des variables d'environnement
 const express = require("express");
-const bodyParser = require("body-parser");
+const bodyParser = require("body-parser");  //permet ensuite d'utiliser req.body pour accéder aux data des formulaires
 const ejs = require("ejs");
 const mongoose=require("mongoose");
 const session = require('express-session');
@@ -9,45 +9,58 @@ const passport = require("passport");
 const passportLocalMongoose = require("passport-local-mongoose");
 
 
-const homeStartingContent = "You are asked to answer the tests below. You have the possibility to answer each task independently.Whenever a task is finished, you no longer have the possibility to do it again. You will be asked to open the camera while answering the different test";
+const http = require('http');
+const hostname = '127.0.0.1';
+const port = 3000;
+
+
+const homeStartingContent = "You are asked to answer the tests below. You have the possibility to answer each task independently. Whenever a task is finished, you no longer have the possibility to do it again. You will be asked to open the camera while answering the different test";
 const aboutContent = "Hac habitasse platea dictumst vestibulum rhoncus est pellentesque. Dictumst vestibulum rhoncus est pellentesque elit ullamcorper. Non diam phasellus vestibulum lorem sed. Platea dictumst quisque sagittis purus sit. Egestas sed sed risus pretium quam vulputate dignissim suspendisse. Mauris in aliquam sem fringilla. Semper risus in hendrerit gravida rutrum quisque non tellus orci. Amet massa vitae tortor condimentum lacinia quis vel eros. Enim ut tellus elementum sagittis vitae. Mauris ultrices eros in cursus turpis massa tincidunt dui.";
 const contactContent = "Scelerisque eleifend donec pretium vulputate sapien. Rhoncus urna neque viverra justo nec ultrices. Arcu dui vivamus arcu felis bibendum. Consectetur adipiscing elit duis tristique. Risus viverra adipiscing at in tellus integer feugiat. Sapien nec sagittis aliquam malesuada bibendum arcu vitae. Consequat interdum varius sit amet mattis. Iaculis nunc sed augue lacus. Interdum posuere lorem ipsum dolor sit amet consectetur adipiscing elit. Pulvinar elementum integer enim neque. Ultrices gravida dictum fusce ut placerat orci nulla. Mauris in aliquam sem fringilla ut morbi tincidunt. Tortor posuere ac ut consequat semper viverra nam libero.";
-
-let firstName = "";
-let email="";
-
-//let tests="";
-
-let testStory="";
-let testFilm="";
-let testFish="";
-let testFlower="";
-let testHeart="";
-let testEmotion="";
-let testNumber="";
-let testVocabulary="";
 
 
 const app = express();
 
 app.set('view engine', 'ejs');
 
-app.use(bodyParser.urlencoded({extended: true}));
+passport.serializeUser(function(user, cb) {
+  process.nextTick(function() {
+    cb(null, { id: user.id, username: user.username });
+  });
+});
+
+passport.deserializeUser(function(user, cb) {
+  process.nextTick(function() {
+    return cb(null, user);
+  });
+});
+
+
+app.use(bodyParser.urlencoded({extended: true}));   //encoder les résultats
 app.use(express.static("public"));
 
 
 app.use(session({
-  secret: "Test",
+  secret: "Test1",
+  name: "test111",
+  //secret: "Test",
   resave: false,
-  saveUninitialized: false
+  //name: "test",
+  cookie: {saveUninitialized: false,
+    httpOnly: false,
+    maxAge: 1000*1000*10000000
+    }
 }));
-
 app.use(passport.initialize());
 app.use(passport.session());
 
 
-mongoose.connect("mongodb+srv://Jacques:3775214698@cluster0.5smrs.mongodb.net/cluster0", {useNewUrlParser: true, useUnifiedTopology: true});
-mongoose.set("useCreateIndex", true);
+//mongoose.connect("mongodb+srv://Jacques:3775214698@cluster0.5smrs.mongodb.net/cluster0", {useCreateIndex: true, useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect("mongodb+srv://Jacques:3775214698@cluster0.gvqxroh.mongodb.net/?retryWrites=true&w=majority", {useNewUrlParser: true, useUnifiedTopology: true});
+//mongoose.connect("mongodb+srv://Jacques:3775214698@cluster0.5smrs.mongodb.net/Cluster0", {useNewUrlParser: true, useUnifiedTopology: true});
+//mongoose.set("useCreateIndex", true);
+//mongoose.connect('mongodb://localhost:3000');
+console.log('Connexion à MongoDB réussie !')
 
 
 const userSchema = new mongoose.Schema ({
@@ -60,7 +73,7 @@ const userSchema = new mongoose.Schema ({
 });
 
 const storiesSchema = new mongoose.Schema ({
-  email:firstName,
+  email:"",
   answer1: "",
   answer2: "",
   answer3: "",
@@ -71,7 +84,7 @@ const storiesSchema = new mongoose.Schema ({
 });
 
 const filmsSchema=new mongoose.Schema ({
-  email:firstName,
+  email:"",
   answer1: "",
   answer2: "",
   answer3: "",
@@ -82,55 +95,64 @@ const filmsSchema=new mongoose.Schema ({
   pictureUrl:[]
 });
 
-
 const fishsSchema=new mongoose.Schema ({
-  email:firstName,
+  email:"",
   trainingAnswers:[],
   answers: [],
   test:"",
-  pictureUrl:[]
+  pictureUrl:[],
+  nb:"",
+  nbTrain:""
 });
 
 const heartsSchema=new mongoose.Schema ({
-  email:firstName,
+  email:"",
   trainingAnswers:[],
   answers: [],
   test:"",
-  pictureUrl:[]
+  pictureUrl:[],
+  nb2:"",
+  nbTrainH:"",
 });
 
 const flowersSchema=new mongoose.Schema ({
-  email:firstName,
+  email:"",
   trainingAnswers:[],
   answers: [],
   test:"",
-  pictureUrl:[]
+  pictureUrl:[],
+  nb3:"",
+  nbTrainF:""
 });
 
 const emotionsSchema=new mongoose.Schema ({
-  email:firstName,
+  email:"",
   trainingAnswers:[],
   answers: [],
   test:"",
-  pictureUrl:[]
+  pictureUrl:[],
+  nb4:"",
+  nbTrainE:""
 });
 
 const numbersSchema=new mongoose.Schema ({
-  email:firstName,
+  email:"",
   trainingAnswers:[],
   answers: [],
   test:"",
-  pictureUrl:[]
+  pictureUrl:[],
+  nb5:"",
+  nbTrainN:""
 });
 
 const wordsSchema=new mongoose.Schema ({
-  email:firstName,
+  email:"",
   answers: [],
   score:[],
   test:"",
-  pictureUrl:[]
+  pictureUrl:[],
+  nb6:""
 });
-
 
 
 userSchema.plugin(passportLocalMongoose); //hash and salt passwords
@@ -154,6 +176,8 @@ const Number =new mongoose.model("Number", numbersSchema);
 
 const Word =new mongoose.model("Word", wordsSchema);
 
+
+
 passport.use(User.createStrategy());
 
 passport.serializeUser(function(user, done) {
@@ -165,24 +189,6 @@ passport.deserializeUser(function(id, done) {
     done(err, user);
   });
 });
-
-const user= new User();
-
-const answer= new Story();
-
-const answerF= new Film();
-
-const fishAnswer=new Fish();
-
-const heartAnswer=new Heart();
-
-const flowerAnswer=new Flower();
-
-const emotionAnswer=new Emotion();
-
-const numberAnswer=new Number();
-
-const wordAnswer= new Word();
 
 
 app.get("/", function(req,res){
@@ -197,114 +203,109 @@ app.get("/register", function(req, res){
   res.render("register");
 });
 
+
 app.get("/home", function(req,res){
-  Story.findOne({email:email},function(err, foundUser){
+
+  Story.findOne({email:req.session.passport.user.username},function(err, foundUser){
     if (err) {
       console.log(err);
     } else {
       if (foundUser) {
-        testStory=foundUser.test;
-        console.log("Story test is", testStory);
+        console.log("Story test is", foundUser.test);
       }
       else{
-        testStory="";
-        console.log("didn't answer the story test");
+        console.log("didn't answer the Story test");
       }
     }
   });
 
-  Film.findOne({email:email},function(err, foundUser){
+  Film.findOne({email:req.session.passport.user.username},function(err, foundUser){
     if (err) {
       console.log(err);
     } else {
       if (foundUser) {
-        testFilm=foundUser.test;
-        console.log("Film test is", testFilm);
+        console.log("Film test is", foundUser.test);
       }
       else {
-        testFilm="";
-        console.log("didn't answer the film test");
+        console.log("didn't answer the Film test");
       }
     }
   });
 
-  Fish.findOne({email:email},function(err, foundUser){
+  Fish.findOne({email:req.session.passport.user.username},function(err, foundUser){
     if (err) {
       console.log(err);
     } else {
       if (foundUser) {
-        testFish=foundUser.test;
-        console.log("Fish Game is", testFish);
+        console.log("Fish Game is", foundUser.test);
       }
       else{
-        testFish="";
         console.log("didn't answer the Fish Game test");
       }
     }
   });
 
-  Heart.findOne({email:email},function(err, foundUser){
+  Heart.findOne({email:req.session.passport.user.username},function(err, foundUser){
     if (err) {
       console.log(err);
     } else {
       if (foundUser) {
-        testHeart=foundUser.test;
-        console.log("Heart Game is", testHeart);
+        console.log("Heart Game is", foundUser.test);
       }
       else{
-        testHeart="";
-        console.log("didn't answer the Herat Game test");
+        console.log("didn't answer the Heart Game test");
       }
     }
   });
 
-  Flower.findOne({email:email},function(err, foundUser){
+  Flower.findOne({email:req.session.passport.user.username},function(err, foundUser){
     if (err) {
       console.log(err);
     } else {
       if (foundUser) {
-        testFlower=foundUser.test;
-        console.log("Flower Game is", testFlower);
+        console.log("Flower Game is", foundUser.test);
       }
       else{
-        testFlower="";
         console.log("didn't answer the Flower Game test");
       }
     }
   });
 
-  Number.findOne({email:email},function(err, foundUser){
+  Number.findOne({email:req.session.passport.user.username},function(err, foundUser){
     if (err) {
       console.log(err);
     } else {
       if (foundUser) {
-        testNumber=foundUser.test;
-        console.log("Numbers Game is", testNumber);
+        console.log("Numbers Game is", foundUser.test);
       }
       else{
-        testNumber="";
         console.log("didn't answer the Numbers Game test");
       }
     }
   });
 
-  Word.findOne({email:email},function(err, foundUser){
+  Word.findOne({email:req.session.passport.user.username},function(err, foundUser){
     if (err) {
       console.log(err);
     } else {
       if (foundUser) {
-        testVocabulary=foundUser.test;
-        console.log("Vocabulary Game is", testVocabulary);
+        console.log("Vocabulary Game is", foundUser.test);
       }
       else{
-        testVocabulary="";
         console.log("didn't answer the Vocabulary Game test");
       }
     }
   });
 
-  console.log("hello",firstName);
-  res.render("home", {startingContent: homeStartingContent, firstName:firstName, text:""});
+  User.findOne({username:req.session.passport.user.username},function(err, foundUser){
+    if (err) {
+      console.log(err);
+    } else {
+      res.render("home", {startingContent: homeStartingContent, firstName:foundUser.firstName, text:""});
+    }
+  });
+
+  //res.render("home", {startingContent: homeStartingContent, firstName:firstName, text:""});
 });
 
 
@@ -318,16 +319,32 @@ app.get("/contact", function(req,res){
 });
 
 
-//Strange stories pages
-
 app.get("/strangestory", function(req,res){
-  console.log(testStory);
-  if(testStory==="done"){
-    res.render("home", {startingContent: homeStartingContent, firstName:firstName, text:"You have already done the strange stories test"});
-  }
-  else{
-    res.render("strangestory");
-  }
+  Story.findOne({email:req.session.passport.user.username},function(err, foundUser){
+    if (err) {
+      console.log(err);
+    } else if(foundUser){
+      if (foundUser.test==="done"){
+        res.render("home", {startingContent: homeStartingContent, firstName:foundUser.firstName, text:"You have already done the strange stories test"});
+      }
+      else{
+        res.render("strangestory");
+      }
+    }
+    else{
+      const answerstory = new Story;
+      answerstory.email = req.session.passport.user.username;
+      answerstory.save(function(err){
+        if(err){
+          print(err);
+        }
+        else{
+          console.log("new Story created");
+        }
+      })
+      res.render("strangestory");
+    }
+  });
 })
 
 app.get("/strangestory1", function(req,res){
@@ -352,14 +369,34 @@ app.get("/strangestory5", function(req,res){
 
 
 app.get("/fishstart", function(req,res){
-  if(testFish==="done"){
-    res.render("home", {startingContent: homeStartingContent, firstName:firstName, text:"You have already done the Fish Game test"});
-  }
-  else{
-    res.render("fishstart");
-  }
+  Fish.findOne({email:req.session.passport.user.username},function(err, foundUser){
+    if (err) {
+      console.log(err);
+    } else if(foundUser){
+      if (foundUser.test==="done"){
+        res.render("home", {startingContent: homeStartingContent, firstName:foundUser.firstName, text:"You have already done the Fish Game test"});
+      }
+      else{
+        res.render("fishstart");
+      }
+    }
+    else{
+      const answerFish = new Fish;
+      answerFish.email = req.session.passport.user.username;
+      answerFish.nb=0;
+      answerFish.nbTrain=0;
+      answerFish.save(function(err){
+        if(err){
+          print(err);
+        }
+        else{
+          console.log("new Fish created");
+        }
+      }); 
+      res.render("fishstart");
+    }
+  })
 })
-
 
 let fishR="droite.PNG";
 let fishC="gauche.PNG";
@@ -383,12 +420,33 @@ app.get("/jeu1",function(req,res){
 
 
 app.get("/heartstart", function(req,res){
-  if(testHeart==="done"){
-    res.render("home", {startingContent: homeStartingContent, firstName:firstName, text:"You have already done the Heart Game test"});
-  }
-  else{
-    res.render("heartstart");
-  }
+  Heart.findOne({email:req.session.passport.user.username},function(err, foundUser){
+    if (err) {
+      console.log(err);
+    } else if(foundUser){
+      if (foundUser.test==="done"){
+        res.render("home", {startingContent: homeStartingContent, firstName:foundUser.firstName, text:"You have already done the Heart Game test"});
+      }
+      else{
+        res.render("heartstart");
+      }
+    }
+    else{
+      const answerHeart = new Heart;
+      answerHeart.email = req.session.passport.user.username;
+      answerHeart.nb2=0;
+      answerHeart.nbTrainH=0;
+      answerHeart.save(function(err){
+        if(err){
+          print(err);
+        }
+        else{
+          console.log("new Heart created");
+        }
+      }); 
+      res.render("heartstart");
+    }
+  })
 })
 
 
@@ -411,13 +469,35 @@ app.get("/jeu2",function(req,res){
 
 
 app.get("/flowerstart", function(req,res){
-  if(testFlower==="done"){
-    res.render("home", {startingContent: homeStartingContent, firstName:firstName, text:"You have already done the Flower Game test"});
-  }
-  else{
+  Flower.findOne({email:req.session.passport.user.username},function(err, foundUser){
+    if (err) {
+      console.log(err);
+    } else if(foundUser){
+      if (foundUser.test==="done"){
+        res.render("home", {startingContent: homeStartingContent, firstName:foundUser.firstName, text:"You have already done the Flower test"});
+      }
+      else{
+        res.render("flowerstart");
+      }
+    }
+    else{
+      const answerFlower = new Flower;
+      answerFlower.email = req.session.passport.user.username;
+      answerFlower.nb3=0;
+      answerFlower.nbTrainF=0;
+      answerFlower.save(function(err){
+        if(err){
+          print(err);
+        }
+        else{
+          console.log("new Flower created");
+        }
+      })
     res.render("flowerstart");
-  }
+    }
+  });
 })
+  
 
 app.get("/flowergamestart",function(req,res){
   res.render("flowergamestart");
@@ -435,12 +515,33 @@ app.get("/jeu3",function(req,res){
 
 
 app.get("/emotionstart", function(req,res){
-  if(testEmotion==="done"){
-    res.render("home", {startingContent: homeStartingContent, firstName:firstName, text:"You have already done the Emotion Recognition Game test"});
-  }
-  else{
+  Emotion.findOne({email:req.session.passport.user.username},function(err, foundUser){
+    if (err) {
+      console.log(err);
+    } else if(foundUser){
+      if (foundUser.test==="done"){
+        res.render("home", {startingContent: homeStartingContent, firstName:foundUser.firstName, text:"You have already done the Emotion test"});
+      }
+      else{
+        res.render("emotionstart");
+      }
+    }
+    else{
+      const answerEmotion = new Emotion;
+      answerEmotion.email = req.session.passport.user.username;
+      answerEmotion.nb4=0;
+      answerEmotion.nbTrainE=0;
+      answerEmotion.save(function(err){
+        if(err){
+          print(err);
+        }
+        else{
+          console.log("new Emotion created");
+        }
+      })
     res.render("emotionstart");
-  }
+    }
+  });
 })
 
 var pictureUrl="train1.png"
@@ -464,12 +565,33 @@ var number2="2";
 
 
 app.get("/numberstart", function(req,res){
-  if(testNumber==="done"){
-    res.render("home", {startingContent: homeStartingContent, firstName:firstName, text:"You have already done the Numbers Game test"});
-  }
-  else{
+  Number.findOne({email:req.session.passport.user.username},function(err, foundUser){
+    if (err) {
+      console.log(err);
+    } else if(foundUser){
+      if (foundUser.test==="done"){
+        res.render("home", {startingContent: homeStartingContent, firstName:foundUser.firstName, text:"You have already done the Number test"});
+      }
+      else{
+        res.render("numberstart");
+      }
+    }
+    else{
+      const answerNumber = new Number;
+      answerNumber.email = req.session.passport.user.username;
+      answerNumber.nb5=0;
+      answerNumber.nbTrainN=0;
+      answerNumber.save(function(err){
+        if(err){
+          print(err);
+        }
+        else{
+          console.log("new Number created");
+        }
+      })
     res.render("numberstart");
-  }
+    }
+  });
 })
 
 
@@ -494,12 +616,32 @@ app.get("/jeu5",function(req,res){
 
 
 app.get("/wordstart", function(req,res){
-  if(testVocabulary==="done"){
-    res.render("home", {startingContent: homeStartingContent, firstName:firstName, text:"You have already done the Vocabulary Game test"});
-  }
-  else{
+  Word.findOne({email:req.session.passport.user.username},function(err, foundUser){
+    if (err) {
+      console.log(err);
+    } else if(foundUser){
+      if (foundUser.test==="done"){
+        res.render("home", {startingContent: homeStartingContent, firstName:foundUser.firstName, text:"You have already done the Word test"});
+      }
+      else{
+        res.render("wordstart");
+      }
+    }
+    else{
+      const answerWord = new Word;
+      answerWord.email = req.session.passport.user.username;
+      answerWord.nb6=0;
+      answerWord.save(function(err){
+        if(err){
+          print(err);
+        }
+        else{
+          console.log("new Word created");
+        }
+      })
     res.render("wordstart");
-  }
+    }
+  });
 })
 
 let word="Tomato";
@@ -532,15 +674,32 @@ app.get("/jeu6",function(req,res){
 })
 
 
-//Silent films pages
-
 app.get("/silentfilm", function(req,res){
-  if(testFilm==="done"){
-    res.render("home", {startingContent: homeStartingContent, firstName:firstName, text:"You have already done the silent films test"});
+  Film.findOne({email:req.session.passport.user.username},function(err, foundUser){
+    if (err) {
+      console.log(err);
+    } else if(foundUser){
+      if (foundUser.test==="done"){
+        res.render("home", {startingContent: homeStartingContent, firstName:foundUser.firstName, text:"You have already done the Film test"});
+      }
+      else{
+        res.render("silentfilm");
+      }
+    }
+    else{
+      const answerFilm = new Film;
+      answerFilm.email = req.session.passport.user.username;
+      answerFilm.save(function(err){
+        if(err){
+          print(err);
+        }
+        else{
+          console.log("new Film created");
+        }
+    })
+  res.render("silentfilm");
   }
-  else{
-    res.render("silentfilm");
-  }
+  });
 })
 
 
@@ -564,24 +723,21 @@ app.get("/silentfilm5", function(req,res){
   res.render("silentfilm5");
 });
 
-
+//aquoicasert
 app.get("/final", function(req,res){
   res.render("final");
 });
 
 
 app.get("/logout", function(req, res){
-  req.logout();
-  res.redirect("/");
+  req.logout(function(err) {
+    if (err) { return next(err); }
+    res.redirect("/");
+  }); 
 });
 
 
-
 app.post("/register", function(req, res){
-  answer.email=req.body.username;
-  answerF.email=req.body.username;
-  firstName=req.body.firstName;
-  email=req.body.username;
 
   User.register({username: req.body.username, firstName:req.body.firstName, lastName: req.body.lastName, gender:req.body.gender}, req.body.password, function(err, user){
     if (err) {
@@ -597,16 +753,8 @@ app.post("/register", function(req, res){
 
 
 app.post("/login", function(req, res){
-  // firstName=req.body.username;
-  email=req.body.username
-  answer.email=email;
-  answerF.email=email;
-  fishAnswer.email=email;
-  heartAnswer.email=email;
-  flowerAnswer.email=email;
-  numberAnswer.email=email;
-  emotionAnswer.email=email;
-  wordAnswer.email=email;
+  
+  User.findOne()
 
   const user = new User({
     username: req.body.username,
@@ -623,16 +771,6 @@ app.post("/login", function(req, res){
       });
     }
   });
-
-  User.findOne({username:email},function(err, foundUser){
-    if (err) {
-      console.log(err);
-    } else {
-      if (foundUser) {
-        firstName=foundUser.firstName;
-      }
-    }
-  });
 });
 
 
@@ -642,111 +780,234 @@ app.post("/home", function(req,res){
 // Getting strange stories answers
 
 app.post("/strangestory1", function(req,res){
-  // console.log(req.body.url);
-  const answer1= req.body.answer1;
-  console.log(answer1);
-  answer.answer1=answer1
-  answer.pictureUrl.push(req.body.photoURL);
-  res.redirect("strangestory2");
+  Story.findOne({email:req.session.passport.user.username},function(err, foundUser){
+    if (err) {
+      console.log(err);
+    } else if (foundUser){
+      foundUser.answer1= req.body.answer1;
+      foundUser.pictureUrl.push(req.body.photoURL);
+      foundUser.save(function(err){
+        if(err){
+          print(err);
+        }
+        else{
+          console.log("successfully added Stories answer1");
+        }
+      }); 
+    }
+    else {
+      res.redirect("home")
+    }
+    res.redirect("strangestory2");
+  });
 });
 
 
 app.post("/strangestory2", function(req,res){
-  const answer2= req.body.answer2;
-  answer.answer2=answer2;
-  console.log(answer2);
-  answer.pictureUrl.push(req.body.photoURL2);
-  res.redirect("strangestory3");
+  Story.findOne({email:req.session.passport.user.username},function(err, foundUser){
+    if (err) {
+      console.log(err);
+    } else {
+      foundUser.answer2= req.body.answer2;;
+      foundUser.pictureUrl.push(req.body.photoURL2);
+      foundUser.save(function(err){
+        if(err){
+          print(err);
+        }
+        else{
+          console.log("successfully added Stories answer2");
+        }
+      }); 
+    }
+    res.redirect("strangestory3");
+  });
 });
+
 
 app.post("/strangestory3", function(req,res){
-  const answer3= req.body.answer3;
-  answer.answer3=answer3;
-  console.log(answer3);
-  answer.pictureUrl.push(req.body.photoURL3);
-  res.redirect("strangestory4");
+  Story.findOne({email:req.session.passport.user.username},function(err, foundUser){
+    if (err) {
+      console.log(err);
+    } else {
+      foundUser.answer3= req.body.answer3;
+      foundUser.pictureUrl.push(req.body.photoURL3);
+      foundUser.save(function(err){
+        if(err){
+          print(err);
+        }
+        else{
+          console.log("successfully added Stories answer3");
+        }
+      }); 
+    }
+    res.redirect("strangestory4");
+  });
 });
+
 
 app.post("/strangestory4", function(req,res){
-  const answer4= req.body.answer4;
-  answer.answer4=answer4;
-  console.log(answer4);
-  answer.pictureUrl.push(req.body.photoURL4);
-  res.redirect("strangestory5");
+  Story.findOne({email:req.session.passport.user.username},function(err, foundUser){
+    if (err) {
+      console.log(err);
+    } else {
+      foundUser.answer4= req.body.answer4;
+      foundUser.pictureUrl.push(req.body.photoURL4);
+      foundUser.save(function(err){
+        if(err){
+          print(err);
+        }
+        else{
+          console.log("successfully added Stories answer4");
+        }
+      }); 
+    }
+    res.redirect("strangestory5");
+  });
 });
 
-app.post("/strangestory5", function(req,res){
-  const answer5= req.body.answer5;
-  answer.answer5=answer5;
-  console.log(answer5);
-  answer.pictureUrl.push(req.body.photoURL5);
-  answer.test="done";
-  storyTest=true;
-  res.redirect("home");
-  answer.save(function(err){
-    if(err){
-      print(err);
-    }
-    else{
-      console.log("successfully added Stories answers");
-    }
-  });
 
+app.post("/strangestory5", function(req,res){
+  Story.findOne({email:req.session.passport.user.username},function(err, foundUser){
+    if (err) {
+      console.log(err);
+    } else {
+      foundUser.answer5= req.body.answer5;
+      foundUser.pictureUrl.push(req.body.photoURL5);
+      foundUser.test="done";
+      foundUser.save(function(err){
+        if(err){
+          print(err);
+        }
+        else{
+          console.log("successfully added Stories answers");
+        }
+      }); 
+    }
+    res.redirect("home");
+  });
 });
 
 
 // Getting silent films answers
-
-
+//quequoi
 app.post("/silentfilm1", function(req,res){
-  const answerF11= req.body.answerF11;
-  const answerF12= req.body.answerF12;
-  console.log(answerF11);
-  console.log(answerF12);
-  answerF.answer1=answerF11;
-  answerF.answer2=answerF12;
-  answerF.pictureUrl.push(req.body.photoURL1);
-  res.redirect("silentfilm2");
+  Film.findOne({email:req.session.passport.user.username},function(err, foundUser){
+    if (err) {
+      console.log(err);
+    } else if (foundUser){
+      foundUser.answer1= req.body.answerF11;
+      foundUser.answer2= req.body.answerF12;
+      foundUser.pictureUrl.push(req.body.photoURL);
+      foundUser.save(function(err){
+        if(err){
+          print(err);
+        }
+        else{
+          console.log("successfully added Films answers");
+        }
+      }); 
+    }
+    else {
+    const answerfilm = new Film;
+    answerfilm.email = req.session.passport.user.username;
+    answerfilm.answer1= req.body.answerF11;
+    answerfilm.answer2= req.body.answerF12;
+    answerfilm.pictureUrl.push(req.body.photoURL1);
+    answerfilm.save(function(err){
+      if(err){
+        print(err);
+      }
+      else{
+        console.log("successfully added Stories answers");
+      }
+    }); 
+    }
+    res.redirect("silentfilm2");
+  });
 });
+
 
 app.post("/silentfilm2", function(req,res){
-  const answerF2= req.body.answerF2;
-  console.log(answerF2);
-  answerF.answer3=answerF2;
-  answerF.pictureUrl.push(req.body.photoURL2);
-  res.redirect("silentfilm3");
+  Film.findOne({email:req.session.passport.user.username},function(err, foundUser){
+    if (err) {
+      console.log(err);
+    } else {
+      foundUser.answer3= req.body.answerF2;
+      foundUser.pictureUrl.push(req.body.photoURL2);
+      foundUser.save(function(err){
+        if(err){
+          print(err);
+        }
+        else{
+          console.log("successfully added films answers");
+        }
+      }); 
+    }
+    res.redirect("silentfilm3");
+  });
 });
+
 
 app.post("/silentfilm3", function(req,res){
-  const answerF3= req.body.answerF3;
-  console.log(answerF3);
-  answerF.answer4=answerF3;
-  answerF.pictureUrl.push(req.body.photoURL3);
-  res.redirect("silentfilm4");
+  Film.findOne({email:req.session.passport.user.username},function(err, foundUser){
+    if (err) {
+      console.log(err);
+    } else {
+      foundUser.answer4= req.body.answerF3;
+      foundUser.pictureUrl.push(req.body.photoURL3);
+      foundUser.save(function(err){
+        if(err){
+          print(err);
+        }
+        else{
+          console.log("successfully added films answers");
+        }
+      }); 
+    }
+    res.redirect("silentfilm4");
+  });
 });
+
 
 app.post("/silentfilm4", function(req,res){
-  const answerF4= req.body.answerF4;
-  console.log(answerF4);
-  answerF.answer5=answerF4;
-  answerF.pictureUrl.push(req.body.photoURL4);
-  res.redirect("silentfilm5");
+  Film.findOne({email:req.session.passport.user.username},function(err, foundUser){
+    if (err) {
+      console.log(err);
+    } else {
+      foundUser.answer5= req.body.answerF4;
+      foundUser.pictureUrl.push(req.body.photoURL4);
+      foundUser.save(function(err){
+        if(err){
+          print(err);
+        }
+        else{
+          console.log("successfully added films answers");
+        }
+      }); 
+    }
+    res.redirect("silentfilm5");
+  });
 });
 
+
 app.post("/silentfilm5", function(req,res){
-  const answerF5= req.body.answerF5;
-  console.log(answerF5);
-  answerF.answer6=answerF5;
-  answerF.pictureUrl.push(req.body.photoURL5);
-  answerF.test="done";
-  res.redirect("home");
-  answerF.save(function(err){
-    if(err){
+  Film.findOne({email:req.session.passport.user.username},function(err, foundUser){
+    if (err) {
       console.log(err);
+    } else {
+      foundUser.answer6= req.body.answerF5;
+      foundUser.pictureUrl.push(req.body.photoURL5);
+      foundUser.test="done";
+      foundUser.save(function(err){
+        if(err){
+          print(err);
+        }
+        else{
+          console.log("successfully added films answers");
+        }
+      }); 
     }
-    else{
-      console.log("Successfully added Film answers")
-    }
+    res.redirect("home");
   });
 });
 
@@ -755,227 +1016,267 @@ let nbTrain=0;
 
 //0 left    1 right
 let fish=["01", "11","10", "01","00","11"];
+
+//couper
 app.post("/fishtraining", function(req,res){
   console.log("game1 Training");
-
-  if(nbTrain<6){
-    if(fish[nbTrain][0]==="0"){
-      fishC="gauche.PNG";
-      imageC="0";
-    }
-    else if(fish[nbTrain][0]==="1"){
-      fishC="droite.PNG";
-      imageC="1";
-    }
-
-    if(fish[nbTrain][1]==="0"){
-      fishR="gauche.PNG";
-    }
-    else if(fish[nbTrain][1]==="1"){
-      fishR="droite.PNG";
-    }
-
-    if(req.body.leftTrue==="leftTrue"){
-      fishAnswer.trainingAnswers.push(req.body.leftTrue);
-    }
-    else if(req.body.leftFalse==="leftFalse"){
-      fishAnswer.trainingAnswers.push(req.body.leftFalse);
-    }
-    else if(req.body.rightTrue==="rightTrue"){
-      fishAnswer.trainingAnswers.push(req.body.rightTrue);
-    }
-    else if(req.body.rightFalse==="rightFalse"){
-      fishAnswer.trainingAnswers.push(req.body.rightFalse);
-    }
-    else{
-      fishAnswer.trainingAnswers.push("no answer");
-    }
-    console.log(nbTrain);
-    console.log(req.body.leftTrue);
-    console.log(req.body.leftFalse);
-    console.log(req.body.rightTrue);
-    console.log(req.body.rightFalse);
-    nbTrain=nbTrain+1;
-    setTimeout(delay, 2000);
-    function delay()
-      {res.redirect("fishtraining");}
-  }
-  else{
-    res.redirect("fishgamestart");
-  }
+  Fish.findOne({email:req.session.passport.user.username},function(err, foundUser){
+    if (err) {
+      console.log(err);
+    } else {
+        if(foundUser.nbTrain<6){
+          if(fish[foundUser.nbTrain][0]==="0"){
+            fishC="gauche.PNG";
+            imageC="0";
+          }
+          else if(fish[foundUser.nbTrain][0]==="1"){
+            fishC="droite.PNG";
+            imageC="1";
+          }
+      
+          if(fish[foundUser.nbTrain][1]==="0"){
+            fishR="gauche.PNG";
+          }
+          else if(fish[foundUser.nbTrain][1]==="1"){
+            fishR="droite.PNG";
+          }
+      
+          if(req.body.leftTrue==="leftTrue"){
+            foundUser.trainingAnswers.push(req.body.leftTrue);
+          }
+          else if(req.body.leftFalse==="leftFalse"){
+            foundUser.trainingAnswers.push(req.body.leftFalse);
+          }
+          else if(req.body.rightTrue==="rightTrue"){
+            foundUser.trainingAnswers.push(req.body.rightTrue);
+          }
+          else if(req.body.rightFalse==="rightFalse"){
+            foundUser.trainingAnswers.push(req.body.rightFalse);
+          }
+          else{
+            foundUser.trainingAnswers.push("no answer");
+          }
+          console.log(foundUser.nbTrain);
+          console.log(foundUser.trainingAnswers[-1])
+          foundUser.nbTrain=foundUser.nbTrain+1;
+          foundUser.save(function(err){
+            if(err){
+              print(err);
+            }
+            else{
+              console.log("successfully added Stories answers");
+            }
+          }); 
+          setTimeout(delay, 2000);
+          function delay()
+            {res.redirect("fishtraining");}
+        }
+        else {
+          res.redirect("fishgamestart");
+        }
+    }   
+  });
 })
 
 
 // 0 left   1 right
 let nb=0;
 let fishT=["11","10","00","00","10","01","00","01","11","00","10","11","01","11","01","11","00","00","11","10","00","00","10","01","00","01","11","11","10","11","01","11","11","00"];
-app.post("/jeu1",function(req,res){
+
+
+app.post("/jeu1", function(req,res){
   console.log("game1");
-  if(nb<34){
-    if(fishT[nb][0]==="0"){
-      fishCT="gauche.PNG";
-      imageCT="0";
-    }
-    else if(fishT[nb][0]==="1"){
-      fishCT="droite.PNG";
-      imageCT="1";
-    }
 
-    if(fishT[nb][1]==="0"){
-      fishRT="gauche.PNG";
-    }
-    else if(fishT[nb][1]==="1"){
-      fishRT="droite.PNG";
-    }
-
-    if(req.body.leftTrue==="leftTrue"){
-      fishAnswer.answers.push(req.body.leftTrue);
-    }
-    else if(req.body.leftFalse==="leftFalse"){
-      fishAnswer.answers.push(req.body.leftFalse);
-    }
-    else if(req.body.rightTrue==="rightTrue"){
-      fishAnswer.answers.push(req.body.rightTrue);
-    }
-    else if(req.body.rightFalse==="rightFalse"){
-      fishAnswer.answers.push(req.body.rightFalse);
-    }
-    else{
-      fishAnswer.answers.push("no answer");
-    }
-      fishAnswer.pictureUrl.push(req.body.photoURL);
-    console.log(nb);
-    console.log(req.body.leftTrue);
-    console.log(req.body.leftFalse);
-    console.log(req.body.rightTrue);
-    console.log(req.body.rightFalse);
-    nb=nb+1;
-    setTimeout(delay, 2000);
-    function delay()
-      {res.redirect("jeu1");}
-  }
-  else{
-    fishAnswer.test="done";
-    // testFish="done";
-    res.redirect("home");
-  }
-  fishAnswer.save(function(err){
-    if(err){
+  Fish.findOne({email:req.session.passport.user.username},function(err, foundUser){
+    if (err) {
       console.log(err);
-    }
-    else{
-      console.log("Successfully added Fish answers")
+    } else {
+      if(foundUser.nb<34){
+        if(fishT[foundUser.nb][0]==="0"){
+          fishCT="gauche.PNG";
+          imageCT="0";
+        }
+        else if(fishT[foundUser.nb][0]==="1"){
+          fishCT="droite.PNG";
+          imageCT="1";
+        }
+        if(fishT[foundUser.nb][1]==="0"){
+          fishRT="gauche.PNG";
+        }
+        else if(fishT[foundUser.nb][1]==="1"){
+          fishRT="droite.PNG";
+        }
+
+        if(req.body.leftTrue==="leftTrue"){
+          foundUser.answers.push(req.body.leftTrue);
+        }
+        else if(req.body.leftFalse==="leftFalse"){
+          foundUser.answers.push(req.body.leftFalse);
+        }
+        else if(req.body.rightTrue==="rightTrue"){
+          foundUser.answers.push(req.body.rightTrue);
+        }
+        else if(req.body.rightFalse==="rightFalse"){
+          foundUser.answers.push(req.body.rightFalse);
+        }
+        else{
+          foundUser.answers.push("no answer");
+        }
+        foundUser.pictureUrl.push(req.body.photoURL);
+        console.log(foundUser.nb);
+        console.log(foundUser.answers[-1]);
+        foundUser.nb=foundUser.nb+1;
+        foundUser.save(function(err){
+          if(err){
+            console.log(err);
+          }
+          else{
+            console.log("Successfully added Fish answers")
+          }
+        });
+        setTimeout(delay, 2000);
+        function delay()
+          {res.redirect("jeu1");}
+      }
+      else {
+        console.log("Successfully finished");
+        foundUser.test="done";
+        foundUser.save(function(err){
+          if(err){
+            console.log(err);
+          }
+          else{
+            console.log("Successfully added Fish answers")
+          }
+        });
+        res.redirect('home');
+      }
     }
   });
-
-
 })
+
 
 let nbTrainH=0;
 let heart=["L","L","R","L","R","R","L"];
 
+
 app.post("/hearttraining", function(req,res){
-  console.log("game2 Training");
-  if(nbTrainH<7){
+console.log("game2 Training");
+  Heart.findOne({email:req.session.passport.user.username},function(err, foundUser){
+    if (err) {
+      console.log(err);
+    } else {
+        if(foundUser.nbTrainH<1){  //77777
+          if(heart[foundUser.nbTrainH]==="R"){
+            imageHeart="R";
+          }
+          else if(heart[foundUser.nbTrainH]==="L"){
+            imageHeart="L";
+          }
 
-    if(heart[nbTrainH]==="R"){
-      imageHeart="R";
+          if(req.body.leftTrue==="leftTrue"){
+            foundUser.trainingAnswers.push(req.body.leftTrue);
+          }
+          else if(req.body.leftFalse==="leftFalse"){
+            foundUser.trainingAnswers.push(req.body.leftFalse);
+          }
+          else if(req.body.rightTrue==="rightTrue"){
+            foundUser.trainingAnswers.push(req.body.rightTrue);
+          }
+          else if(req.body.rightFalse==="rightFalse"){
+            foundUser.trainingAnswers.push(req.body.rightFalse);
+          }
+          else{
+            foundUser.trainingAnswers.push("no answer");
+          }
+          console.log(foundUser.nbTrainH);
+          console.log(foundUser.trainingAnswers[-1])
+          foundUser.nbTrainH=foundUser.nbTrainH+1;
+          foundUser.save(function(err){
+            if(err){
+              print(err);
+            }
+            else{
+              console.log("successfully added Heart answers");
+            }
+          }); 
+          setTimeout(delay, 2000);
+          function delay()
+            {res.redirect("hearttraining");}
+        }
+        else {
+          res.redirect("heartgamestart");
+        }
     }
-    else if(heart[nbTrainH]==="L"){
-      imageHeart="L";
-    }
-
-    if(req.body.leftTrue==="leftTrue"){
-      heartAnswer.trainingAnswers.push(req.body.leftTrue);
-    }
-    else if(req.body.leftFalse==="leftFalse"){
-      heartAnswer.trainingAnswers.push(req.body.leftFalse);
-    }
-    else if(req.body.rightTrue==="rightTrue"){
-      heartAnswer.trainingAnswers.push(req.body.rightTrue);
-    }
-    else if(req.body.rightFalse==="rightFalse"){
-      heartAnswer.trainingAnswers.push(req.body.rightFalse);
-    }
-    else{
-      heartAnswer.trainingAnswers.push("no answer");
-    }
-
-    console.log(nbTrainH);
-    console.log(req.body.leftTrue);
-    console.log(req.body.leftFalse);
-    console.log(req.body.rightTrue);
-    console.log(req.body.rightFalse);
-
-    nbTrainH=nbTrainH+1;
-    setTimeout(delay, 2000);
-    function delay()
-      {res.redirect("hearttraining");}
-  }
-  else{
-    res.redirect("heartgamestart");
-  }
+  });
 })
 
 
 let nb2=0;
 let heartT=["L","L","R","R","L","R","R","L","L","L","R"];
 
-app.post("/jeu2",function(req,res){
-
+app.post("/jeu2", function(req,res){
   console.log("game2");
-  if(nb2<11){
-    if(heartT[nb2]==="R"){
-      imageHeartT="R";
-    }
-    else if(heartT[nb2]==="L"){
-      imageHeartT="L";
-    }
 
-    if(req.body.leftTrue==="leftTrue"){
-      heartAnswer.answers.push(req.body.leftTrue);
-    }
-    else if(req.body.leftFalse==="leftFalse"){
-      heartAnswer.answers.push(req.body.leftFalse);
-    }
-    else if(req.body.rightTrue==="rightTrue"){
-      heartAnswer.answers.push(req.body.rightTrue);
-    }
-    else if(req.body.rightFalse==="rightFalse"){
-      heartAnswer.answers.push(req.body.rightFalse);
-    }
-    else{
-      heartAnswer.answers.push("no answer");
-    }
-    heartAnswer.pictureUrl.push(req.body.photoURL);
-
-    console.log(nb2);
-    console.log(req.body.leftTrue);
-    console.log(req.body.leftFalse);
-    console.log(req.body.rightTrue);
-    console.log(req.body.rightFalse);
-    nb2=nb2+1;
-    setTimeout(delay, 2000);
-    function delay()
-      {res.redirect("jeu2");}
-
-  }
-  else{
-    heratAnswer.test="done";
-    // testHeart="done";
-    res.redirect("home");
-  }
-  heartAnswer.save(function(err){
-    if(err){
+  Heart.findOne({email:req.session.passport.user.username},function(err, foundUser){
+    if (err) {
       console.log(err);
-    }
-    else{
-      console.log("Successfully added Heart answers")
+    } else {
+      if(foundUser.nb2<11){
+        if(heartT[foundUser.nb2]==="R"){
+          imageHeartT="R";
+        }
+        else if(heartT[foundUser.nb2]==="L"){
+          imageHeartT="L";
+        }
+
+        if(req.body.leftTrue==="leftTrue"){
+          foundUser.answers.push(req.body.leftTrue);
+        }
+        else if(req.body.leftFalse==="leftFalse"){
+          foundUser.answers.push(req.body.leftFalse);
+        }
+        else if(req.body.rightTrue==="rightTrue"){
+          foundUser.answers.push(req.body.rightTrue);
+        }
+        else if(req.body.rightFalse==="rightFalse"){
+          foundUser.answers.push(req.body.rightFalse);
+        }
+        else{
+          foundUser.answers.push("no answer");
+        }
+        foundUser.pictureUrl.push(req.body.photoURL);
+        console.log(foundUser.nb2);
+        console.log(foundUser.answers[-1])
+        foundUser.nb2=foundUser.nb2+1;
+        foundUser.save(function(err){
+          if(err){
+            console.log(err);
+          }
+          else{
+            console.log("Successfully added Heart answers")
+          }
+        });
+        setTimeout(delay, 2000);
+        function delay()
+          {res.redirect("jeu2");}
+      }
+      else {
+        console.log("Successfully finished");
+        foundUser.test="done";
+        foundUser.save(function(err){
+          if(err){
+            console.log(err);
+          }
+          else{
+            console.log("Done")
+          }
+        });
+        res.redirect('home');
+      }
     }
   });
-
 })
-
 
 
 let nbTrainF=0;
@@ -983,194 +1284,236 @@ let flower=["L","R","L","L","R","R","L"];
 
 app.post("/flowertraining", function(req,res){
   console.log("game3 Training");
-  if(nbTrainF<7){
-    if(flower[nbTrainF]==="R"){
-      imageFlower="R";
+  Flower.findOne({email:req.session.passport.user.username},function(err, foundUser){
+    if (err) {
+      console.log(err);
+    } else {
+      if(foundUser.nbTrainF<7){    
+        if(flower[foundUser.nbTrainF]==="R"){
+          imageFlower="R";
+        }
+        else if(flower[foundUser.nbTrainF]==="L"){
+          imageFlower="L";
+        }
+  
+        if(req.body.leftTrue==="leftTrue"){
+          foundUser.trainingAnswers.push(req.body.leftTrue);
+        }
+        else if(req.body.leftFalse==="leftFalse"){
+          foundUser.trainingAnswers.push(req.body.leftFalse);
+        }
+        else if(req.body.rightTrue==="rightTrue"){
+          foundUser.trainingAnswers.push(req.body.rightTrue);
+        }
+        else if(req.body.rightFalse==="rightFalse"){
+          foundUser.trainingAnswers.push(req.body.rightFalse);
+        }
+        else{
+          foundUser.trainingAnswers.push("no answer");
+        }        
+        console.log(foundUser.nbTrainF);
+        console.log(foundUser.trainingAnswers[-1])
+        foundUser.nbTrainF=foundUser.nbTrainF+1;
+        foundUser.save(function(err){
+          if(err){
+            print(err);
+          }
+          else{
+            console.log("successfully added Flower answers");
+          }
+        }); 
+        setTimeout(delay, 2000);
+        function delay()
+          {res.redirect("flowertraining");}
+      }
+      else {
+        res.redirect("flowergamestart");
+      }
     }
-    else if(flower[nbTrainF]==="L"){
-      imageFlower="L";
-    }
-
-    if(req.body.leftTrue==="leftTrue"){
-      flowerAnswer.trainingAnswers.push(req.body.leftTrue);
-    }
-    else if(req.body.leftFalse==="leftFalse"){
-      flowerAnswer.trainingAnswers.push(req.body.leftFalse);
-    }
-    else if(req.body.rightTrue==="rightTrue"){
-      flowerAnswer.trainingAnswers.push(req.body.rightTrue);
-    }
-    else if(req.body.rightFalse==="rightFalse"){
-      flowerAnswer.trainingAnswers.push(req.body.rightFalse);
-    }
-    else{
-      flowerAnswer.trainingAnswers.push("no answer");
-    }
-    console.log(nbTrainF);
-    console.log(req.body.leftTrue);
-    console.log(req.body.leftFalse);
-    console.log(req.body.rightTrue);
-    console.log(req.body.rightFalse);
-    nbTrainF=nbTrainF+1;
-    setTimeout(delay, 2000);
-    function delay()
-      {res.redirect("flowertraining");}
-  }
-  else{
-    res.redirect("flowergamestart");
-  }
+  });
 })
-
 
 
 let nb3=0;
 let flowerT=["L","L","R","R","L","R","R","L","L","R","L"];
-app.post("/jeu3",function(req,res){
+
+app.post("/jeu3", function(req,res){
   console.log("game3");
-  if(nb3<11){
-    if(flowerT[nb3]==="R"){
-      imageFlowerT="R";
-    }
-    else if(flowerT[nb3]==="L"){
-      imageFlowerT="L";
-    }
 
-    if(req.body.leftTrue==="leftTrue"){
-      flowerAnswer.answers.push(req.body.leftTrue);
-    }
-    else if(req.body.leftFalse==="leftFalse"){
-      flowerAnswer.answers.push(req.body.leftFalse);
-    }
-    else if(req.body.rightTrue==="rightTrue"){
-      flowerAnswer.answers.push(req.body.rightTrue);
-    }
-    else if(req.body.rightFalse==="rightFalse"){
-      flowerAnswer.answers.push(req.body.rightFalse);
-    }
-    else{
-      flowerAnswer.answers.push("no answer");
-    }
-    flowerAnswer.pictureUrl.push(req.body.photoURL);
-
-    console.log(nb3);
-    console.log(req.body.leftTrue);
-    console.log(req.body.leftFalse);
-    console.log(req.body.rightTrue);
-    console.log(req.body.rightFalse);
-    nb3=nb3+1;
-    setTimeout(delay, 2000);
-    function delay()
-      {res.redirect("jeu3");}
-  }
-  else{
-    flowerAnswer.test="done";
-    // testFlower="done";
-    res.redirect("home");
-  }
-  flowerAnswer.save(function(err){
-    if(err){
+  Flower.findOne({email:req.session.passport.user.username},function(err, foundUser){
+    if (err) {
       console.log(err);
+    } else {
+      if(foundUser.nb3<11){
+        if(flowerT[foundUser.nb3]==="R"){
+          imageFlowerT="R";
+        }
+        else if(flowerT[foundUser.nb3]==="L"){
+          imageFlowerT="L";
+        }
+
+        if(req.body.leftTrue==="leftTrue"){
+      foundUser.answers.push(req.body.leftTrue);
+        }
+        else if(req.body.leftFalse==="leftFalse"){
+          foundUser.answers.push(req.body.leftFalse);
+        }
+        else if(req.body.rightTrue==="rightTrue"){
+          foundUser.answers.push(req.body.rightTrue);
+        }
+        else if(req.body.rightFalse==="rightFalse"){
+          foundUser.answers.push(req.body.rightFalse);
+        }
+        else{
+          foundUser.answers.push("no answer");
+        }
+        foundUser.pictureUrl.push(req.body.photoURL);
+        console.log(foundUser.nb3);
+        console.log(foundUser.answers[-1])
+        foundUser.nb3=foundUser.nb3+1;
+        foundUser.save(function(err){
+          if(err){
+            console.log(err);
+          }
+          else{
+            console.log("Successfully added Flower answers")
+          }
+        });
+        setTimeout(delay, 2000);
+        function delay()
+          {res.redirect("jeu3");}
+      }
+      else {
+        console.log("Successfully finished");
+        foundUser.test="done";
+        foundUser.save(function(err){
+          if(err){
+            console.log(err);
+          }
+          else{
+            console.log("Done")
+          }
+        });
+        res.redirect('home');
+      }
     }
-    else{
-      console.log("Successfully added Flower answers");
-    }
-  })
+  });
 })
 
 
 let nbTrainE=0;
 var images=["train2.png", "train3.png", "train4.png", "train5.png"];
+
 app.post("/emotiontraining", function(req,res){
   console.log("game4 Training");
-  if(nbTrainE<4){
-    if(req.body.happy==="happy"){
-      emotionAnswer.trainingAnswers.push(req.body.happy);
-    }
-    else if(req.body.sad==="sad"){
-      emotionAnswer.trainingAnswers.push(req.body.sad);
-    }
-    else if(req.body.fearful==="fearful"){
-      emotionAnswer.trainingAnswers.push(req.body.fearful);
-    }
-    else if(req.body.angry==="angry"){
-      emotionAnswer.trainingAnswers.push(req.body.angry);
-    }
-    else if(req.body.neutral==="neutral"){
-      emotionAnswer.trainingAnswers.push(req.body.angry);
-    }
-    else{
-      emotionAnswer.trainingAnswers.push("no answer");
-    }
-    console.log(nbTrainE);
-    console.log(req.body.happy);
-    console.log(req.body.sad);
-    console.log(req.body.fearful);
-    console.log(req.body.angry);
-    console.log(req.body.neutral);
-    pictureUrl=images[nbTrainE];
-    nbTrainE=nbTrainE+1;
-    setTimeout(delay, 2000);
-    function delay()
-      {res.redirect("emotiontraining");}
-  }
-  else{
-    res.redirect("emotiongamestart");
-  }
-})
-
-
+    Emotion.findOne({email:req.session.passport.user.username},function(err, foundUser){
+      if (err) {
+        console.log(err);
+      } else {
+        if(foundUser.nbTrainE<5){
+          if(req.body.happy==="happy"){
+            foundUser.trainingAnswers.push(req.body.happy);
+          }
+          else if(req.body.sad==="sad"){
+            foundUser.trainingAnswers.push(req.body.sad);
+          }
+          else if(req.body.fearful==="fearful"){
+            foundUser.trainingAnswers.push(req.body.fearful);
+          }
+          else if(req.body.angry==="angry"){
+            foundUser.trainingAnswers.push(req.body.angry);
+          }
+          else if(req.body.neutral==="neutral"){
+            foundUser.trainingAnswers.push(req.body.angry);
+          }
+          else{
+            foundUser.trainingAnswers.push("no answer");
+          }
+          console.log(nbTrainE);
+          console.log(foundUser.trainingAnswers[-1])
+          pictureUrl=images[foundUser.nbTrainE]; 
+          foundUser.nbTrainE=foundUser.nbTrainE+1;
+          foundUser.save(function(err){
+            if(err){
+             print(err);
+             }
+             else{
+              console.log("successfully added Emotion answers");
+            }
+          });
+          setTimeout(delay, 2000);
+          function delay()
+            {res.redirect("emotiontraining");}
+        }
+        else{
+          res.redirect("emotiongamestart");
+        }
+      }
+    });
+  })
 
 
 let nb4=0;
 var imagesT=["test2.png", "test3.png", "test4.png", "test5.png","test6.png", "test7.png", "test8.png", "test9.png","test10.png", "test11.png", "test12.png", "test13.png","test14.png", "test15.png", "test16.png", "test17.png","test18.png", "test19.png", "test20.png", "test21.png","test22.png", "test23.png", "test24.png", "test25.png","test26.png", "test27.png", "test28.png", "test29.png","test30.png"];
+
 app.post("/jeu4", function(req,res){
   console.log("game4");
-  console.log("nb4",nb4);
-  if(nb4<30){
-    if(req.body.happy==="happy"){
-      emotionAnswer.answers.push(req.body.happy);
-    }
-    else if(req.body.sad==="sad"){
-      emotionAnswer.answers.push(req.body.sad);
-    }
-    else if(req.body.fearful==="fearful"){
-      emotionAnswer.answers.push(req.body.fearful);
-    }
-    else if(req.body.angry==="angry"){
-      emotionAnswer.answers.push(req.body.angry);
-    }
-    else if(req.body.neutral==="neutral"){
-      emotionAnswer.answers.push(req.body.angry);
-    }
-    else{
-      emotionAnswer.answers.push("no answer");
-    }
-    emotionAnswer.pictureUrl.push(req.body.photoURL);
 
-    console.log(nbTrainE);
-    console.log(req.body.happy);
-    console.log(req.body.sad);
-    console.log(req.body.fearful);
-    console.log(req.body.angry);
-    console.log(req.body.neutral);
-    pictureUrlT=imagesT[nb4];
-    nb4=nb4+1;
-    setTimeout(delay, 2000);
-    function delay()
-      {res.redirect("jeu4");}
-  }
-  else{
-    emotionAnswer.test="done";
-    res.redirect("home");
-  }
-  emotionAnswer.save(function(err){
-    if(err){
+  Emotion.findOne({email:req.session.passport.user.username},function(err, foundUser){
+    if (err) {
       console.log(err);
+    } else {
+      if(foundUser.nb4<30){
+        if(req.body.happy==="happy"){
+          foundUser.answers.push(req.body.happy);
+        }
+        else if(req.body.sad==="sad"){
+          foundUser.answers.push(req.body.sad);
+        }
+        else if(req.body.fearful==="fearful"){
+          foundUser.answers.push(req.body.fearful);
+        }
+        else if(req.body.angry==="angry"){
+          foundUser.answers.push(req.body.angry);
+        }
+        else if(req.body.neutral==="neutral"){
+          foundUser.answers.push(req.body.angry);
+        }
+        else{
+          foundUser.answers.push("no answer");
+        }
+        foundUser.pictureUrl.push(req.body.photoURL);
+        console.log(foundUser.nb4);
+        console.log(foundUser.answers[-1]);
+        pictureUrlT=imagesT[foundUser.nb4];
+        foundUser.nb4=foundUser.nb4+1;
+        foundUser.save(function(err){
+          if(err){
+            console.log(err);
+          }
+          else{
+            console.log("Successfully added Flower answers")
+          }
+        });
+        setTimeout(delay, 2000);
+        function delay()
+          {res.redirect("jeu4");}
+      }
+      else {
+        console.log("Successfully finished");
+        foundUser.test="done";
+        foundUser.save(function(err){
+          if(err){
+            console.log(err);
+          }
+          else{
+            console.log("Done")
+          }
+        });
+        res.redirect('home');
+      }
     }
-    else{
-      console.log("Successfully added Emotion Recognition answers");
-    }
-  })
+  });
 })
 
 
@@ -1179,93 +1522,120 @@ var numbersInv=["28","65","39","21"];
 let nbTrainN=0;
 let num= 0;
 let message="";
-app.post("/numbertraining",function(req,res){
-  console.log("game5 training");
-if(nbTrainN<3){
-      num=numbers[nbTrainN];
-      number1=num[0];
-      number2=num[1];
-    if(req.body.number===numbersInv[nbTrainN]){
-      console.log("good job!");
-      message="Correct answer! good job!";
-      numberAnswer.trainingAnswers.push("true");
+
+app.post("/numbertraining", function(req,res){
+  console.log("game5 Training");
+    Number.findOne({email:req.session.passport.user.username},function(err, foundUser){
+      if(foundUser.nbTrainN<3){
+        num=numbers[foundUser.nbTrainN];
+        number1=num[0];
+        number2=num[1];
+        if(req.body.number===numbersInv[foundUser.nbTrainN]){
+          console.log("good job!");
+          message="Correct answer! good job!";
+          foundUser.trainingAnswers.push("true");
+        }
+        else{
+          console.log("wrong answer!");
+          message="Answer not correct!";
+          foundUser.trainingAnswers.push("false");
+        }
+        console.log(nbTrainN);
+        console.log(foundUser.trainingAnswers[-1])
+        foundUser.nbTrainN=foundUser.nbTrainN+1;
+        foundUser.save(function(err){
+          if(err){
+            print(err);
+            }
+          else{
+          console.log("successfully added Flower answers");
+          }
+        })
+        setTimeout(delay, 2000);
+        function delay()
+        {res.redirect("numbergamestart");}
     }
     else{
-      console.log("wrong answer!");
-      message="Answer not correct!";
-      numberAnswer.trainingAnswers.push("false");
+      res.redirect("numbergamestart");
     }
-    console.log(req.body.number);
-    console.log(nbTrainN);
-    nbTrainN=nbTrainN+1;
-    setTimeout(delay, 2000);
-    function delay()
-      {res.redirect("numbertraining");}
-  }
-  else{
-    res.redirect("numbergamestart");
-  }
+  });
 })
-
 
 
 var numbersT=["53", "475", "952", "6927","3948","75314","97852"];
 var numbersInvT=["13","35","574","259","7296","8493","41357","97852"];
 let nb5=0;
-app.post("/jeu5",function(req,res){
+
+app.post("/jeu5", function(req,res){
   console.log("game5");
-  if(nb5<7){
-    if(numbersT[nb5].length===2){
-      number1T=numbersT[nb5][0];
-      number2T=numbersT[nb5][1];
-    }
-    else if(numbersT[nb5].length===3){
-      number1T=numbersT[nb5][0];
-      number2T=numbersT[nb5][1];
-      number3T=numbersT[nb5][2];
-    }
-    else if(numbersT[nb5].length===4){
-      number1T=numbersT[nb5][0];
-      number2T=numbersT[nb5][1];
-      number3T=numbersT[nb5][2];
-      number4T=numbersT[nb5][3];
-    }
-    else if(numbersT[nb5].length===5){
-      number1T=numbersT[nb5][0];
-      number2T=numbersT[nb5][1];
-      number3T=numbersT[nb5][2];
-      number4T=numbersT[nb5][3];
-      number5T=numbersT[nb5][4];
-    }
-    if(req.body.number===numbersInvT[nb5]){
-      console.log("good job!");
-      numberAnswer.answers.push("true");
-    }
-    else{
-      console.log("wrong answer!");
-      numberAnswer.answers.push("false");
-    }
-    numberAnswer.pictureUrl.push(req.body.photoURL);
-    console.log(req.body.number);
-    console.log(nb5);
-    nb5=nb5+1;
-    setTimeout(delay, 2000);
-    function delay()
-      {res.redirect("jeu5");}
-  }
-  else{
-    numberAnswer.test="done";
-    // testFlower="done";
-    res.redirect("home");
-  }
-  numberAnswer.save(function(err){
-    if(err){
+
+  Number.findOne({email:req.session.passport.user.username},function(err, foundUser){
+    if (err) {
       console.log(err);
+    } else {
+      if(foundUser.nb5<7){
+        if(numbersT[foundUser.nb5].length===2){
+          number1T=numbersT[foundUser.nb5][0];
+          number2T=numbersT[foundUser.nb5][1];
+        }
+        else if(numbersT[foundUser.nb5].length===3){
+          number1T=numbersT[foundUser.nb5][0];
+          number2T=numbersT[foundUser.nb5][1];
+          number3T=numbersT[foundUser.nb5][2];
+        }
+        else if(numbersT[foundUser.nb5].length===4){
+          number1T=numbersT[foundUser.nb5][0];
+          number2T=numbersT[foundUser.nb5][1];
+          number3T=numbersT[foundUser.nb5][2];
+          number4T=numbersT[foundUser.nb5][3];
+        }
+        else if(numbersT[foundUser.nb5].length===5){
+          number1T=numbersT[foundUser.nb5][0];
+          number2T=numbersT[foundUser.nb5][1];
+          number3T=numbersT[foundUser.nb5][2];
+          number4T=numbersT[foundUser.nb5][3];
+          number5T=numbersT[foundUser.nb5][4];
+        }
+
+        if(req.body.number===numbersInvT[foundUser.nb5]){
+          console.log("good job!");
+          foundUser.answers.push("true");
+        }
+        else{
+          console.log("wrong answer!");
+          foundUser.answers.push("false");
+        }
+        foundUser.pictureUrl.push(req.body.photoURL);
+        console.log(foundUser.nb5);
+        console.log(foundUser.answers[-1]);
+        foundUser.nb5=foundUser.nb5+1;
+        foundUser.save(function(err){
+          if(err){
+            console.log(err);
+          }
+          else{
+            console.log("Successfully added Number answers")
+          }
+        });
+        setTimeout(delay, 2000);
+        function delay()
+          {res.redirect("jeu5");}
+      }
+      else {
+        console.log("Successfully finished");
+        foundUser.test="done";
+        foundUser.save(function(err){
+          if(err){
+            console.log(err);
+          }
+          else{
+            console.log("Done")
+          }
+        });
+        res.redirect('home');
+      }
     }
-    else{
-      console.log("Successfully added Number answers");
-    }
-  })
+  });
 })
 
 
@@ -1276,7 +1646,7 @@ app.post("/wordtraining", function(req,res){
     wordMessage="Correct Answer! Good job!";
   }
   else{
-    wordMessage="Answer not correct! the correct answer is"+correctAnswer+" !";
+    wordMessage="Answer not correct! the correct answer is "+correctAnswer+" !";
   }
   res.redirect("wordgamestart");
 })
@@ -1290,64 +1660,69 @@ let option5Table=["Wet","Run Up","Water","Money","Bowl","Switch","Doubt","Flare"
 let option6Table=["Flag","Lie Down","Unkind","Drive","Last","Cook","Fire","Side","Tune","Copied","Cheerful","Slack","Small","Likeness","Untrue","Disperse","Job","Truthful","Trespass"];
 let correctAnswerTable=["Throw","Wet","Lie Down","Unkind","Accept","Fight","Mend","Upset","Flare","Fever","Charmed","Freedom","Obstinate","Exact","Likeness","Nameless","Raise","Game","Polite","Succeed"];
 let nb6=0;
-app.post("/jeu6",function(req,res){
-if(nb6<19){
-  console.log(req.body.checkbox);
-  if(req.body.checkbox===correctAnswerTable[nb6]){
-    wordAnswer.answers.push(req.body.checkbox);
-    wordAnswer.score.push("True");
-    console.log("correctAnswer");
-  }
-  else{
-    console.log("False answer. The correct answer is ", correctAnswerTable[nb6]);
-    wordAnswer.answers.push(req.body.checkbox);
-    wordAnswer.score.push("False");
 
-  }
-  wordAnswer.pictureUrl.push(req.body.photoURL);
+app.post("/jeu6", function(req,res){
+  console.log("game6");
 
-  wordT=wordTable[nb6];
-  option1T=option1Table[nb6];
-  option2T=option2Table[nb6];
-  option3T=option3Table[nb6];
-  option4T=option4Table[nb6];
-  option5T=option5Table[nb6];
-  option6T=option6Table[nb6];
-  nb6=nb6+1;
-  res.redirect("jeu6");
-}
-else{
-  wordAnswer.test="done";
-  res.redirect("home");
-}
-wordAnswer.save(function(err){
-  if(err){
-    console.log(err);
-  }
-  else{
-    console.log("Successfully added Vocabulary answers");
-  }
+  Word.findOne({email:req.session.passport.user.username},function(err, foundUser){
+    if (err) {
+      console.log(err);
+    } else {
+      if(foundUser.nb6<19){
+        console.log(req.body.checkbox);
+        if(req.body.checkbox===correctAnswerTable[foundUser.nb6]){
+          foundUser.answers.push(req.body.checkbox);
+          foundUser.score.push("True");
+          console.log("correctAnswer");
+        }
+        else{
+          console.log("False answer. The correct answer is ", correctAnswerTable[foundUser.nb6]);
+          foundUser.answers.push(req.body.checkbox);
+          foundUser.score.push("False");
+        }
+        foundUser.pictureUrl.push(req.body.photoURL);
+        wordT=wordTable[foundUser.nb6];
+        option1T=option1Table[foundUser.nb6];
+        option2T=option2Table[foundUser.nb6];
+        option3T=option3Table[foundUser.nb6];
+        option4T=option4Table[foundUser.nb6];
+        option5T=option5Table[foundUser.nb6];
+        option6T=option6Table[foundUser.nb6];
+        foundUser.nb6=foundUser.nb6+1;
+        foundUser.save(function(err){
+          if(err){
+            console.log(err);
+          }
+          else{
+            console.log("Successfully added Word answers")
+          }
+        });
+        res.redirect("jeu6");
+    setTimeout(delay, 2000);  
+    function delay()
+      {res.redirect("jeu6");}
+      }
+      else {
+        console.log("Successfully finished");
+        foundUser.test="done";
+        foundUser.save(function(err){
+          if(err){
+            console.log(err);
+          }
+          else{
+            console.log("Done")
+          }
+        });
+        res.redirect('home');
+      }
+    } 
+  });
 })
-})
 
 
-
-app.listen(process.env.PORT, function() {
-  console.log("Server has started successfully");
-});
-
-
-const http = require('http');
-
-const hostname = '127.0.0.1';
-const port = 3000;
-
-const server = http.createServer((req, res) => {
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'text/plain');
-  res.end('Hello World');
-});
-
-server.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
-});
+//app.listen(process.env.PORT, function() {
+//  console.log("Server has started successfully");
+//});
+app.listen(port, function() {
+    console.log("Server has started successfully");
+  });
