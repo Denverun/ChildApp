@@ -4,11 +4,12 @@ const express = require("express");
 const bodyParser = require("body-parser");  //permet ensuite d'utiliser req.body pour accéder aux data des formulaires
 const ejs = require("ejs");
 const mongoose=require("mongoose");
-//const session = require('express-session');
-const session = require('cookie-session');
+const session = require('express-session');
+//const session = require('cookie-session');
 const passport = require("passport");
 const passportLocalMongoose = require("passport-local-mongoose");
 
+const MongoStore = require('connect-mongo');
 
 const http = require('http');
 const hostname = '127.0.0.1';
@@ -40,13 +41,14 @@ passport.deserializeUser(function(user, cb) {
 app.use(bodyParser.urlencoded({extended: true}));   //encoder les résultats
 app.use(express.static("public"));
 
-
+mongoUrl = "mongodb+srv://Jacques:3775214698@cluster0.gvqxroh.mongodb.net/?retryWrites=true&w=majority"
 app.use(session({
   secret: "Test1",
   name: "test111",
   //secret: "Test",
   resave: false,
   //name: "test",
+  store: MongoStore.create({mongoUrl : "mongodb+srv://Jacques:3775214698@cluster0.gvqxroh.mongodb.net/?retryWrites=true&w=majority"}),
   cookie: {saveUninitialized: false,
     httpOnly: false,
     maxAge: 1000*1000*10000000
