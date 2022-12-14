@@ -366,7 +366,7 @@ app.get("/strangestory", function(req,res){
         User.findOne({email:req.session.passport.user.username}, function(err,found){
           if (err) {
             console.log(err);
-          } else if(foundUser){
+          } else if(found){
             res.render("home", {startingContent: homeStartingContent, firstName:found.firstName, text:"You have already done the strange stories test"});
           } else{
             res.render("")
