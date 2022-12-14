@@ -59,7 +59,7 @@ app.use(passport.session());
 
 
 //mongoose.connect("mongodb+srv://Jacques:3775214698@cluster0.5smrs.mongodb.net/cluster0", {useCreateIndex: true, useNewUrlParser: true, useUnifiedTopology: true});
-mongoose.connect("mongodb+srv://Jacques:3775214698@cluster0.gvqxroh.mongodb.net/?retryWrites=true&w=majority", {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect("mongodb+srv://Jacques:cocodev@cluster0.gvqxroh.mongodb.net/?retryWrites=true&w=majority", {useNewUrlParser: true, useUnifiedTopology: true});
 //mongoose.connect("mongodb+srv://Jacques:3775214698@cluster0.5smrs.mongodb.net/Cluster0", {useNewUrlParser: true, useUnifiedTopology: true});
 //mongoose.set("useCreateIndex", true);
 //mongoose.connect('mongodb://localhost:3000');

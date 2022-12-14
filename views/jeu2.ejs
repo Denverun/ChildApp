@@ -58,50 +58,6 @@
       document.querySelectorAll("img")[0].classList.add("right");
       // document.querySelectorAll("img")[0].classList.remove( "hide" );
     }
-/*
-    function answe(key) {
-      console.log("11")
-      switch (key) {
-        case "f":
-          console.log("f");
-          if (document.getElementById("ctrHT").innerText === "L") {
-
-            document.getElementById("left-true").checked = true;
-            document.querySelector("button").click();
-          } else {
-
-            document.getElementById("left-false").checked = true;
-            document.querySelector("button").click();
-          }
-          // document.getElementById("1").checked=true;
-
-          break;
-
-        case "j":
-          console.log("j");
-          if (document.getElementById("ctrHT").innerText === "R") {
-
-            document.getElementById("right-true").checked = true;
-            document.querySelector("button").click();
-          } else {
-
-            document.getElementById("right-false").checked = true;
-            document.querySelector("button").click();
-          }
-          // document.getElementById("2").checked=true;
-
-          break;
-        default:
-          console.log(key);
-      }
-      console.log("freewin")
-      //document.removeEventListener("keypress", answe(event.key));
-    }
-
-    document.addEventListener("keypress", answe(event.key))  */
-
-    
-
     
     document.addEventListener("keypress", function once(event) {
       answer(event.key);

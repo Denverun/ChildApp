@@ -59,11 +59,13 @@
         document.querySelectorAll("li")[4].classList.remove("hide");
       }
 
-      document.addEventListener("keypress", function(event) {
-        answer(event.key);
-        //makeSound(event.key);
-        //buttonAnimation(event.key);
-      });
+      document.addEventListener("keypress", function once(event) {
+      answer(event.key);
+      document.removeEventListener("keypress", once)
+      
+      //makeSound(event.key);
+      //buttonAnimation(event.key);
+    });
 
       function answer(key) {
         switch (key) {

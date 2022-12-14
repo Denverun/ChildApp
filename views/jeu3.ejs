@@ -59,8 +59,12 @@
       // document.querySelectorAll("img")[0].classList.remove( "hide" );
     }
 
-    document.addEventListener("keypress", function(event) {
+    document.addEventListener("keypress", function once(event) {
       answer(event.key);
+      document.removeEventListener("keypress", once)
+      
+      //makeSound(event.key);
+      //buttonAnimation(event.key);
     });
 
     function answer(key) {
