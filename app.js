@@ -368,8 +368,6 @@ app.get("/strangestory", function(req,res){
             console.log(err);
           } else if(found){
             res.render("home", {startingContent: homeStartingContent, firstName:found.firstName, text:"You have already done the strange stories test"});
-          } else{
-            res.render("")
           }
         })
       }
