@@ -215,6 +215,9 @@ app.get("/home", function(req,res){
     } else {
       if (foundUser) {
         console.log("Story test is", foundUser.test);
+        if (foundUser.test!=="done"){
+          Story.findOneAndDelete({email:req.session.passport.user.username})
+        }
       }
       else{
         console.log("didn't answer the Story test");
@@ -228,6 +231,15 @@ app.get("/home", function(req,res){
     } else {
       if (foundUser) {
         console.log("Film test is", foundUser.test);
+        if (foundUser.test!=="done"){
+          foundUser.answer1 = ""
+          foundUser.answer2 = ""
+          foundUser.answer3 = ""
+          foundUser.answer4 = ""
+          foundUser.answer5 = ""
+          foundUser.answer6 = ""
+          foundUser.pictureUrl = []
+        }
       }
       else {
         console.log("didn't answer the Film test");
