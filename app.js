@@ -216,7 +216,6 @@ app.get("/home", function(req,res){
       if (foundUser) {
         console.log("Story test is", foundUser.test);
         if (foundUser.test!=="done"){
-          //foundUser.remove()
           foundUser.delete()
         }
       }
@@ -233,21 +232,7 @@ app.get("/home", function(req,res){
       if (foundUser) {
         console.log("Film test is", foundUser.test);
         if (foundUser.test!=="done"){
-          foundUser.answer1 = ""
-          foundUser.answer2 = ""
-          foundUser.answer3 = ""
-          foundUser.answer4 = ""
-          foundUser.answer5 = ""
-          foundUser.answer6 = ""
-          foundUser.pictureUrl = []
-          foundUser.save(function(err){
-            if(err){
-              console.log(err);
-            }
-            else{
-              console.log("Done")
-            }
-          });
+          foundUser.delete()
         }
       }
       else {
@@ -262,6 +247,9 @@ app.get("/home", function(req,res){
     } else {
       if (foundUser) {
         console.log("Fish Game is", foundUser.test);
+        if (foundUser.test!=="done"){
+          foundUser.delete()
+        }
       }
       else{
         console.log("didn't answer the Fish Game test");
@@ -275,6 +263,9 @@ app.get("/home", function(req,res){
     } else {
       if (foundUser) {
         console.log("Heart Game is", foundUser.test);
+        if (foundUser.test!=="done"){
+          foundUser.delete()
+        }
       }
       else{
         console.log("didn't answer the Heart Game test");
@@ -288,6 +279,9 @@ app.get("/home", function(req,res){
     } else {
       if (foundUser) {
         console.log("Flower Game is", foundUser.test);
+        if (foundUser.test!=="done"){
+          foundUser.delete()
+        }
       }
       else{
         console.log("didn't answer the Flower Game test");
@@ -301,6 +295,9 @@ app.get("/home", function(req,res){
     } else {
       if (foundUser) {
         console.log("Numbers Game is", foundUser.test);
+        if (foundUser.test!=="done"){
+          foundUser.delete()
+        }
       }
       else{
         console.log("didn't answer the Numbers Game test");
@@ -314,6 +311,9 @@ app.get("/home", function(req,res){
     } else {
       if (foundUser) {
         console.log("Vocabulary Game is", foundUser.test);
+        if (foundUser.test!=="done"){
+          foundUser.delete()
+        }
       }
       else{
         console.log("didn't answer the Vocabulary Game test");
@@ -1190,7 +1190,7 @@ console.log("game2 Training");
     if (err) {
       console.log(err);
     } else {
-        if(foundUser.nbTrainH<1){  //77777
+        if(foundUser.nbTrainH<7){
           if(heart[foundUser.nbTrainH]==="R"){
             imageHeart="R";
           }
