@@ -321,6 +321,22 @@ app.get("/home", function(req,res){
     }
   });
 
+  Emotion.findOne({email:req.session.passport.user.username},function(err, foundUser){
+    if (err) {
+      console.log(err);
+    } else {
+      if (foundUser) {
+        console.log("Emotion test is", foundUser.test);
+        if (foundUser.test!=="done"){
+          foundUser.delete()
+        }
+      }
+      else {
+        console.log("didn't answer the Emotion test");
+      }
+    }
+  });
+
   User.findOne({username:req.session.passport.user.username},function(err, foundUser){
     if (err) {
       console.log(err);
@@ -1516,7 +1532,7 @@ app.post("/jeu4", function(req,res){
             console.log(err);
           }
           else{
-            console.log("Successfully added Flower answers")
+            console.log("Successfully added Emotion answers")
           }
         });
         setTimeout(delay, 2000);
@@ -1572,7 +1588,7 @@ app.post("/numbertraining", function(req,res){
             print(err);
             }
           else{
-          console.log("successfully added Flower answers");
+          console.log("successfully added Number answers");
           }
         })
         setTimeout(delay, 2000);
