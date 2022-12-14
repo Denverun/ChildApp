@@ -216,7 +216,8 @@ app.get("/home", function(req,res){
       if (foundUser) {
         console.log("Story test is", foundUser.test);
         if (foundUser.test!=="done"){
-          Story.findOneAndDelete({email:req.session.passport.user.username})
+          //foundUser.remove()
+          foundUser.delete()
         }
       }
       else{
@@ -239,6 +240,14 @@ app.get("/home", function(req,res){
           foundUser.answer5 = ""
           foundUser.answer6 = ""
           foundUser.pictureUrl = []
+          foundUser.save(function(err){
+            if(err){
+              console.log(err);
+            }
+            else{
+              console.log("Done")
+            }
+          });
         }
       }
       else {
