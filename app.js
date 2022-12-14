@@ -344,8 +344,6 @@ app.get("/home", function(req,res){
       res.render("home", {startingContent: homeStartingContent, firstName:foundUser.firstName, text:""});
     }
   });
-
-  //res.render("home", {startingContent: homeStartingContent, firstName:firstName, text:""});
 });
 
 
@@ -365,7 +363,15 @@ app.get("/strangestory", function(req,res){
       console.log(err);
     } else if(foundUser){
       if (foundUser.test==="done"){
-        res.render("home", {startingContent: homeStartingContent, firstName:foundUser.firstName, text:"You have already done the strange stories test"});
+        User.findOne({email:req.session.passport.user.username}, function(err,found){
+          if (err) {
+            console.log(err);
+          } else if(foundUser){
+            res.render("home", {startingContent: homeStartingContent, firstName:found.firstName, text:"You have already done the strange stories test"});
+          } else{
+            res.render("")
+          }
+        })
       }
       else{
         res.render("strangestory");
