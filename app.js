@@ -1450,7 +1450,7 @@ app.post("/jeu3", function(req,res){
 
 
 let nbTrainE=0;
-var images=["train2.png", "train3.png", "train4.png", "train5.png"];
+var images=["train1.jpg", "train2.png", "train3.png", "train4.png", "train5.png"];
 
 app.post("/emotiontraining", function(req,res){
   console.log("game4 Training");
@@ -1502,7 +1502,7 @@ app.post("/emotiontraining", function(req,res){
 
 
 let nb4=0;
-var imagesT=["test2.png", "test3.png", "test4.png", "test5.png","test6.png", "test7.png", "test8.png", "test9.png","test10.png", "test11.png", "test12.png", "test13.png","test14.png", "test15.png", "test16.png", "test17.png","test18.png", "test19.png", "test20.png", "test21.png","test22.png", "test23.png", "test24.png", "test25.png","test26.png", "test27.png", "test28.png", "test29.png","test30.png"];
+var imagesT=["test1.png", "test2.png", "test3.png", "test4.png", "test5.png","test6.png", "test7.png", "test8.png", "test9.png","test10.png", "test11.png", "test12.png", "test13.png","test14.png", "test15.png", "test16.png", "test17.png","test18.png", "test19.png", "test20.png", "test21.png","test22.png", "test23.png", "test24.png", "test25.png","test26.png", "test27.png", "test28.png", "test29.png","test30.png"];
 
 app.post("/jeu4", function(req,res){
   console.log("game4");
