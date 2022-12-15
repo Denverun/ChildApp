@@ -51,7 +51,7 @@ app.use(session({
   store: MongoStore.create({mongoUrl : "mongodb+srv://Jacques:3775214698@cluster0.gvqxroh.mongodb.net/?retryWrites=true&w=majority"}),
   cookie: {saveUninitialized: false,
     httpOnly: false,
-    maxAge: 1000*1000*10000000
+    maxAge: 1000*1000*100000
     }
 }));
 app.use(passport.initialize());
@@ -1745,7 +1745,6 @@ app.post("/jeu6", function(req,res){
             console.log("Successfully added Word answers")
           }
         });
-        res.redirect("jeu6");
     setTimeout(delay, 2000);  
     function delay()
       {res.redirect("jeu6");}
@@ -1763,7 +1762,7 @@ app.post("/jeu6", function(req,res){
         });
         res.redirect('home');
       }
-    } 
+    }
   });
 })
 
@@ -1774,5 +1773,5 @@ app.listen(process.env.PORT, function() {
 /*
 app.listen(port, function() {
     console.log("Server has started successfully");
-  });   */
+  }); */   
    
