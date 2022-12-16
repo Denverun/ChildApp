@@ -501,7 +501,7 @@ app.get("/heartstart", function(req,res){
 let imageHeart="R";
 
 app.get("/hearttraining",function(req,res){
-  res.render("hearttraining", {imageHeart:imageHeart});   
+  res.render("hearttraining", {imageHeart:"R"});   
 })
 
 app.get("/heartgamestart",function(req,res){
@@ -1204,7 +1204,6 @@ app.post("/jeu1", function(req,res){
 })
 
 
-let nbTrainH=0;
 let heart=["L","L","R","L","R","R","L"];
 
 
@@ -1764,12 +1763,12 @@ app.post("/jeu6", function(req,res){
   });
 })
 
-
+/*
 app.listen(process.env.PORT, function() {
   console.log("Server has started successfully");
 });
-/*
+*/
 app.listen(port, function() {
     console.log("Server has started successfully");
-  }); */   
-   
+  });   
+
