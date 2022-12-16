@@ -501,7 +501,7 @@ app.get("/heartstart", function(req,res){
 let imageHeart="R";
 
 app.get("/hearttraining",function(req,res){
-  res.render("hearttraining", {imageHeart:imageHeart});
+  res.render("hearttraining", {imageHeart:imageHeart});   
 })
 
 app.get("/heartgamestart",function(req,res){
@@ -644,7 +644,7 @@ app.get("/numberstart", function(req,res){
 
 
 app.get("/numbertraining",function(req,res){
-  res.render("numbertraining", {number1:number1, number2:number2, message:message});
+  res.render("numbertraining", {number1:number1, number2:number2, message:""});
 })
 
 app.get("/numbergamestart", function(req,res){
@@ -1105,7 +1105,7 @@ app.post("/fishtraining", function(req,res){
             foundUser.trainingAnswers.push("no answer");
           }
           console.log(foundUser.nbTrain);
-          console.log(foundUser.trainingAnswers[-1])
+          console.log(foundUser.trainingAnswers[foundUser.trainingAnswers.length-1])
           foundUser.nbTrain=foundUser.nbTrain+1;
           foundUser.save(function(err){
             if(err){
@@ -1172,7 +1172,7 @@ app.post("/jeu1", function(req,res){
         }
         foundUser.pictureUrl.push(req.body.photoURL);
         console.log(foundUser.nb);
-        console.log(foundUser.answers[-1]);
+        console.log(foundUser.answers[foundUser.answers.length-1]);
         foundUser.nb=foundUser.nb+1;
         foundUser.save(function(err){
           if(err){
@@ -1238,7 +1238,7 @@ console.log("game2 Training");
             foundUser.trainingAnswers.push("no answer");
           }
           console.log(foundUser.nbTrainH);
-          console.log(foundUser.trainingAnswers[-1])
+          console.log(foundUser.trainingAnswers[foundUser.trainingAnswers.length-1])
           foundUser.nbTrainH=foundUser.nbTrainH+1;
           foundUser.save(function(err){
             if(err){
@@ -1295,7 +1295,7 @@ app.post("/jeu2", function(req,res){
         }
         foundUser.pictureUrl.push(req.body.photoURL);
         console.log(foundUser.nb2);
-        console.log(foundUser.answers[-1])
+        console.log(foundUser.answers[foundUser.answers.length-1])
         foundUser.nb2=foundUser.nb2+1;
         foundUser.save(function(err){
           if(err){
@@ -1360,7 +1360,7 @@ app.post("/flowertraining", function(req,res){
           foundUser.trainingAnswers.push("no answer");
         }        
         console.log(foundUser.nbTrainF);
-        console.log(foundUser.trainingAnswers[-1])
+        console.log(foundUser.trainingAnswers[foundUser.trainingAnswers.length-1])
         foundUser.nbTrainF=foundUser.nbTrainF+1;
         foundUser.save(function(err){
           if(err){
@@ -1417,7 +1417,7 @@ app.post("/jeu3", function(req,res){
         }
         foundUser.pictureUrl.push(req.body.photoURL);
         console.log(foundUser.nb3);
-        console.log(foundUser.answers[-1])
+        console.log(foundUser.answers[foundUser.answers.length-1])
         foundUser.nb3=foundUser.nb3+1;
         foundUser.save(function(err){
           if(err){
@@ -1478,7 +1478,7 @@ app.post("/emotiontraining", function(req,res){
             foundUser.trainingAnswers.push("no answer");
           }
           console.log(nbTrainE);
-          console.log(foundUser.trainingAnswers[-1])
+          console.log(foundUser.trainingAnswers[foundUser.trainingAnswers.length-1])
           pictureUrl=images[foundUser.nbTrainE]; 
           foundUser.nbTrainE=foundUser.nbTrainE+1;
           foundUser.save(function(err){
@@ -1532,7 +1532,7 @@ app.post("/jeu4", function(req,res){
         }
         foundUser.pictureUrl.push(req.body.photoURL);
         console.log(foundUser.nb4);
-        console.log(foundUser.answers[-1]);
+        console.log(foundUser.answers[foundUser.answers.length-1]);
         pictureUrlT=imagesT[foundUser.nb4];
         foundUser.nb4=foundUser.nb4+1;
         foundUser.save(function(err){
@@ -1565,19 +1565,16 @@ app.post("/jeu4", function(req,res){
 })
 
 
-var numbers=["56", "93", "12"];
+var numbers=["82", "56", "93", "12"];
 var numbersInv=["28","65","39","21"];
-let nbTrainN=0;
-let num= 0;
+//let nbTrainN=0;
+//let num= 0;
 let message="";
 
 app.post("/numbertraining", function(req,res){
   console.log("game5 Training");
     Number.findOne({email:req.session.passport.user.username},function(err, foundUser){
       if(foundUser.nbTrainN<3){
-        num=numbers[foundUser.nbTrainN];
-        number1=num[0];
-        number2=num[1];
         if(req.body.number===numbersInv[foundUser.nbTrainN]){
           console.log("good job!");
           message="Correct answer! good job!";
@@ -1588,8 +1585,8 @@ app.post("/numbertraining", function(req,res){
           message="Answer not correct!";
           foundUser.trainingAnswers.push("false");
         }
-        console.log(nbTrainN);
-        console.log(foundUser.trainingAnswers[-1])
+        console.log(foundUser.nbTrainN);
+        console.log(foundUser.trainingAnswers[foundUser.trainingAnswers.length-1])
         foundUser.nbTrainN=foundUser.nbTrainN+1;
         foundUser.save(function(err){
           if(err){
@@ -1601,7 +1598,8 @@ app.post("/numbertraining", function(req,res){
         })
         setTimeout(delay, 2000);
         function delay()
-        {res.redirect("numbergamestart");}
+        {res.render("numbertraining", {number1: numbers[foundUser.nbTrainN].substring(0,1),
+          number2: numbers[foundUser.nbTrainN].substring(1,2), message: message});}
     }
     else{
       res.redirect("numbergamestart");
@@ -1655,7 +1653,7 @@ app.post("/jeu5", function(req,res){
         }
         foundUser.pictureUrl.push(req.body.photoURL);
         console.log(foundUser.nb5);
-        console.log(foundUser.answers[-1]);
+        console.log(foundUser.answers[foundUser.answers.length-1]);
         foundUser.nb5=foundUser.nb5+1;
         foundUser.save(function(err){
           if(err){
@@ -1766,12 +1764,12 @@ app.post("/jeu6", function(req,res){
   });
 })
 
-
+/*
 app.listen(process.env.PORT, function() {
   console.log("Server has started successfully");
-});
-/*
+});*/
+
 app.listen(port, function() {
     console.log("Server has started successfully");
-  }); */   
+  });    
    
