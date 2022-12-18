@@ -116,6 +116,8 @@ const heartsSchema=new mongoose.Schema ({
   pictureUrl:[],
   nb2:"",
   nbTrainH:"",
+  imageHeart:"",
+  imageHeartT:""
 });
 
 const flowersSchema=new mongoose.Schema ({
@@ -125,7 +127,9 @@ const flowersSchema=new mongoose.Schema ({
   test:"",
   pictureUrl:[],
   nb3:"",
-  nbTrainF:""
+  nbTrainF:"",
+  imageFlower:"",
+  imageFlowerT:""
 });
 
 const emotionsSchema=new mongoose.Schema ({
@@ -135,7 +139,9 @@ const emotionsSchema=new mongoose.Schema ({
   test:"",
   pictureUrl:[],
   nb4:"",
-  nbTrainE:""
+  nbTrainE:"",
+  pictureUrlS:"",
+  pictureUrlT:""
 });
 
 const numbersSchema=new mongoose.Schema ({
@@ -484,6 +490,8 @@ app.get("/heartstart", function(req,res){
       answerHeart.email = req.session.passport.user.username;
       answerHeart.nb2=0;
       answerHeart.nbTrainH=0;
+      answerHeart.imageHeart="R";
+      answerHeart.imageHeartT="R";
       answerHeart.save(function(err){
         if(err){
           print(err);
@@ -498,7 +506,7 @@ app.get("/heartstart", function(req,res){
 })
 
 
-let imageHeart="R";
+
 
 app.get("/hearttraining",function(req,res){
   res.render("hearttraining", {imageHeart:"R"});   
@@ -508,11 +516,8 @@ app.get("/heartgamestart",function(req,res){
   res.render("heartgamestart");
 })
 
-
-let imageHeartT="R";
-
 app.get("/jeu2",function(req,res){
-  res.render("jeu2", {imageHeartT:imageHeartT});
+  res.render("jeu2", {imageHeartT:"R"});
 })
 
 
@@ -533,6 +538,8 @@ app.get("/flowerstart", function(req,res){
       answerFlower.email = req.session.passport.user.username;
       answerFlower.nb3=0;
       answerFlower.nbTrainF=0;
+      answerFlower.imageFlower="L";
+      answerFlower.imageFlowerT="R";
       answerFlower.save(function(err){
         if(err){
           print(err);
@@ -553,12 +560,12 @@ app.get("/flowergamestart",function(req,res){
 
 let imageFlower="L";
 app.get("/flowertraining",function(req,res){
-  res.render("flowertraining", {imageFlower:imageFlower});
+  res.render("flowertraining", {imageFlower:"L"});
 })
 
 let imageFlowerT="R";
 app.get("/jeu3",function(req,res){
-  res.render("jeu3", {imageFlowerT:imageFlowerT});
+  res.render("jeu3", {imageFlowerT:"R"});
 })
 
 
@@ -592,9 +599,9 @@ app.get("/emotionstart", function(req,res){
   });
 })
 
-var pictureUrl="train1.png"
+
 app.get("/emotiontraining",function(req,res){
-  res.render("emotiontraining", {pictureUrl:pictureUrl});
+  res.render("emotiontraining", {pictureUrl:"train1.png"});
 })
 
 app.get("/emotiongamestart", function(req,res){
@@ -602,9 +609,8 @@ app.get("/emotiongamestart", function(req,res){
 })
 
 
-var pictureUrlT="test1.png";
 app.get("/jeu4",function(req,res){
-  res.render("jeu4", {pictureUrlT:pictureUrlT});
+  res.render("jeu4", {pictureUrlT:"test1.png"});
 })
 
 
@@ -1128,7 +1134,6 @@ app.post("/fishtraining", function(req,res){
 
 
 // 0 left   1 right
-let nb=0;
 let fishT=["11","10","00","00","10","01","00","01","11","00","10","11","01","11","01","11","00","00","11","10","00","00","10","01","00","01","11","11","10","11","01","11","11","00"];
 
 
@@ -1203,22 +1208,22 @@ app.post("/jeu1", function(req,res){
   });
 })
 
-
+// L : Left   R : Right
 let heart=["L","L","R","L","R","R","L"];
 
 
 app.post("/hearttraining", function(req,res){
-console.log("game2 Training");
+  console.log("game2 Training");
   Heart.findOne({email:req.session.passport.user.username},function(err, foundUser){
     if (err) {
       console.log(err);
     } else {
         if(foundUser.nbTrainH<7){
           if(heart[foundUser.nbTrainH]==="R"){
-            imageHeart="R";
+            foundUser.imageHeart="R";
           }
           else if(heart[foundUser.nbTrainH]==="L"){
-            imageHeart="L";
+            foundUser.imageHeart="L";
           }
 
           if(req.body.leftTrue==="leftTrue"){
@@ -1249,7 +1254,7 @@ console.log("game2 Training");
           }); 
           setTimeout(delay, 2000);
           function delay()
-            {res.redirect("hearttraining");}
+            {res.render("hearttraining", {imageHeart:foundUser.imageHeart});}
         }
         else {
           res.redirect("heartgamestart");
@@ -1259,7 +1264,7 @@ console.log("game2 Training");
 })
 
 
-let nb2=0;
+
 let heartT=["L","L","R","R","L","R","R","L","L","L","R"];
 
 app.post("/jeu2", function(req,res){
@@ -1271,10 +1276,10 @@ app.post("/jeu2", function(req,res){
     } else {
       if(foundUser.nb2<11){
         if(heartT[foundUser.nb2]==="R"){
-          imageHeartT="R";
+          foundUser.imageHeartT="R";
         }
         else if(heartT[foundUser.nb2]==="L"){
-          imageHeartT="L";
+          foundUser.imageHeartT="L";
         }
 
         if(req.body.leftTrue==="leftTrue"){
@@ -1306,7 +1311,7 @@ app.post("/jeu2", function(req,res){
         });
         setTimeout(delay, 2000);
         function delay()
-          {res.redirect("jeu2");}
+          {res.render("jeu2", {imageHeartT:foundUser.imageHeartT});}
       }
       else {
         console.log("Successfully finished");
@@ -1326,7 +1331,6 @@ app.post("/jeu2", function(req,res){
 })
 
 
-let nbTrainF=0;
 let flower=["L","R","L","L","R","R","L"];
 
 app.post("/flowertraining", function(req,res){
@@ -1337,10 +1341,10 @@ app.post("/flowertraining", function(req,res){
     } else {
       if(foundUser.nbTrainF<7){    
         if(flower[foundUser.nbTrainF]==="R"){
-          imageFlower="R";
+          foundUser.imageFlower="R";
         }
         else if(flower[foundUser.nbTrainF]==="L"){
-          imageFlower="L";
+          foundUser.imageFlower="L";
         }
   
         if(req.body.leftTrue==="leftTrue"){
@@ -1371,7 +1375,7 @@ app.post("/flowertraining", function(req,res){
         }); 
         setTimeout(delay, 2000);
         function delay()
-          {res.redirect("flowertraining");}
+          {res.render("flowertraining",{imageFlower:foundUser.imageFlower});}
       }
       else {
         res.redirect("flowergamestart");
@@ -1381,26 +1385,25 @@ app.post("/flowertraining", function(req,res){
 })
 
 
-let nb3=0;
+
 let flowerT=["L","L","R","R","L","R","R","L","L","R","L"];
 
 app.post("/jeu3", function(req,res){
   console.log("game3");
-
   Flower.findOne({email:req.session.passport.user.username},function(err, foundUser){
     if (err) {
       console.log(err);
     } else {
       if(foundUser.nb3<11){
         if(flowerT[foundUser.nb3]==="R"){
-          imageFlowerT="R";
+          foundUser.imageFlowerT="R";
         }
         else if(flowerT[foundUser.nb3]==="L"){
-          imageFlowerT="L";
+          foundUser.imageFlowerT="L";
         }
 
         if(req.body.leftTrue==="leftTrue"){
-      foundUser.answers.push(req.body.leftTrue);
+          foundUser.answers.push(req.body.leftTrue);
         }
         else if(req.body.leftFalse==="leftFalse"){
           foundUser.answers.push(req.body.leftFalse);
@@ -1428,7 +1431,7 @@ app.post("/jeu3", function(req,res){
         });
         setTimeout(delay, 2000);
         function delay()
-          {res.redirect("jeu3");}
+          {res.render("jeu3",{imageFlowerT:foundUser.imageFlowerT});}
       }
       else {
         console.log("Successfully finished");
@@ -1448,8 +1451,7 @@ app.post("/jeu3", function(req,res){
 })
 
 
-let nbTrainE=0;
-var images=["train1.jpg", "train2.png", "train3.png", "train4.png", "train5.png"];
+var images=["train2.png", "train3.png", "train4.png", "train5.png"];
 
 app.post("/emotiontraining", function(req,res){
   console.log("game4 Training");
@@ -1471,14 +1473,14 @@ app.post("/emotiontraining", function(req,res){
             foundUser.trainingAnswers.push(req.body.angry);
           }
           else if(req.body.neutral==="neutral"){
-            foundUser.trainingAnswers.push(req.body.angry);
+            foundUser.trainingAnswers.push(req.body.neutral);
           }
           else{
             foundUser.trainingAnswers.push("no answer");
           }
-          console.log(nbTrainE);
+          console.log(foundUser.nbTrainE);
           console.log(foundUser.trainingAnswers[foundUser.trainingAnswers.length-1])
-          pictureUrl=images[foundUser.nbTrainE]; 
+          foundUser.pictureUrlS=images[foundUser.nbTrainE]; 
           foundUser.nbTrainE=foundUser.nbTrainE+1;
           foundUser.save(function(err){
             if(err){
@@ -1490,7 +1492,7 @@ app.post("/emotiontraining", function(req,res){
           });
           setTimeout(delay, 2000);
           function delay()
-            {res.redirect("emotiontraining");}
+            {res.render("emotiontraining",{pictureUrl:foundUser.pictureUrlS});}
         }
         else{
           res.redirect("emotiongamestart");
@@ -1500,17 +1502,15 @@ app.post("/emotiontraining", function(req,res){
   })
 
 
-let nb4=0;
-var imagesT=["test1.png", "test2.png", "test3.png", "test4.png", "test5.png","test6.png", "test7.png", "test8.png", "test9.png","test10.png", "test11.png", "test12.png", "test13.png","test14.png", "test15.png", "test16.png", "test17.png","test18.png", "test19.png", "test20.png", "test21.png","test22.png", "test23.png", "test24.png", "test25.png","test26.png", "test27.png", "test28.png", "test29.png","test30.png"];
+var imagesT=[ "test2.png", "test3.png", "test4.png", "test5.png","test6.png", "test7.png", "test8.png", "test9.png","test10.png", "test11.png", "test12.png", "test13.png","test14.png", "test15.png", "test16.png", "test17.png","test18.png", "test19.png", "test20.png", "test21.png","test22.png", "test23.png", "test24.png", "test25.png","test26.png", "test27.png", "test28.png", "test29.png","test30.png"];
 
 app.post("/jeu4", function(req,res){
   console.log("game4");
-
   Emotion.findOne({email:req.session.passport.user.username},function(err, foundUser){
     if (err) {
       console.log(err);
     } else {
-      if(foundUser.nb4<30){
+      if(foundUser.nb4<29){
         if(req.body.happy==="happy"){
           foundUser.answers.push(req.body.happy);
         }
@@ -1524,7 +1524,7 @@ app.post("/jeu4", function(req,res){
           foundUser.answers.push(req.body.angry);
         }
         else if(req.body.neutral==="neutral"){
-          foundUser.answers.push(req.body.angry);
+          foundUser.answers.push(req.body.neutral);
         }
         else{
           foundUser.answers.push("no answer");
@@ -1532,7 +1532,7 @@ app.post("/jeu4", function(req,res){
         foundUser.pictureUrl.push(req.body.photoURL);
         console.log(foundUser.nb4);
         console.log(foundUser.answers[foundUser.answers.length-1]);
-        pictureUrlT=imagesT[foundUser.nb4];
+        foundUser.pictureUrlT=imagesT[foundUser.nb4];
         foundUser.nb4=foundUser.nb4+1;
         foundUser.save(function(err){
           if(err){
@@ -1544,7 +1544,7 @@ app.post("/jeu4", function(req,res){
         });
         setTimeout(delay, 2000);
         function delay()
-          {res.redirect("jeu4");}
+          {res.render("jeu4",{pictureUrlT:foundUser.pictureUrlT});}
       }
       else {
         console.log("Successfully finished");
@@ -1566,8 +1566,6 @@ app.post("/jeu4", function(req,res){
 
 var numbers=["82", "56", "93", "12"];
 var numbersInv=["28","65","39","21"];
-//let nbTrainN=0;
-//let num= 0;
 let message="";
 
 app.post("/numbertraining", function(req,res){
@@ -1608,8 +1606,7 @@ app.post("/numbertraining", function(req,res){
 
 
 var numbersT=["53", "475", "952", "6927","3948","75314","97852"];
-var numbersInvT=["13","35","574","259","7296","8493","41357","97852"];
-let nb5=0;
+var numbersInvT=["13","35","574","259","7296","8493","41357","25879"];
 
 app.post("/jeu5", function(req,res){
   console.log("game5");
@@ -1704,7 +1701,6 @@ let option4Table=["Taste","Taste","Found","Empty","Fight","Bang","Upset","Roof",
 let option5Table=["Wet","Run Up","Water","Money","Bowl","Switch","Doubt","Flare","Ocean","Frightened","Forest","Orderly","Stupid","Attendance","Nameless","Waver","Problem","Curtsey","Punish"];
 let option6Table=["Flag","Lie Down","Unkind","Drive","Last","Cook","Fire","Side","Tune","Copied","Cheerful","Slack","Small","Likeness","Untrue","Disperse","Job","Truthful","Trespass"];
 let correctAnswerTable=["Throw","Wet","Lie Down","Unkind","Accept","Fight","Mend","Upset","Flare","Fever","Charmed","Freedom","Obstinate","Exact","Likeness","Nameless","Raise","Game","Polite","Succeed"];
-let nb6=0;
 
 app.post("/jeu6", function(req,res){
   console.log("game6");
@@ -1770,5 +1766,5 @@ app.listen(process.env.PORT, function() {
 */
 app.listen(port, function() {
     console.log("Server has started successfully");
-  });   
+  });
 
