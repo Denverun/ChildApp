@@ -1759,12 +1759,12 @@ app.post("/jeu6", function(req,res){
   });
 })
 
-/*
+
 app.listen(process.env.PORT, function() {
   console.log("Server has started successfully");
 });
-*/
+/*
 app.listen(port, function() {
     console.log("Server has started successfully");
-  });
+  });*/
 
