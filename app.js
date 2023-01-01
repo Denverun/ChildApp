@@ -1121,7 +1121,7 @@ app.post("/fishtraining", function(req,res){
               console.log("successfully added Stories answers");
             }
           }); 
-          setTimeout(delay, 500);
+          setTimeout(delay, 1000);
           function delay()
             {res.redirect("fishtraining");}
         }
@@ -1187,7 +1187,7 @@ app.post("/jeu1", function(req,res){
             console.log("Successfully added Fish answers")
           }
         });
-        setTimeout(delay, 500);
+        setTimeout(delay, 1000);
         function delay()
           {res.redirect("jeu1");}
       }
@@ -1252,7 +1252,7 @@ app.post("/hearttraining", function(req,res){
               console.log("successfully added Heart answers");
             }
           }); 
-          setTimeout(delay, 2000);
+          setTimeout(delay, 1000);
           function delay()
             {res.render("hearttraining", {imageHeart:foundUser.imageHeart});}
         }
@@ -1309,7 +1309,7 @@ app.post("/jeu2", function(req,res){
             console.log("Successfully added Heart answers")
           }
         });
-        setTimeout(delay, 500);
+        setTimeout(delay, 1000);
         function delay()
           {res.render("jeu2", {imageHeartT:foundUser.imageHeartT});}
       }
@@ -1373,7 +1373,7 @@ app.post("/flowertraining", function(req,res){
             console.log("successfully added Flower answers");
           }
         }); 
-        setTimeout(delay, 2000);
+        setTimeout(delay, 1000);
         function delay()
           {res.render("flowertraining",{imageFlower:foundUser.imageFlower});}
       }
@@ -1429,7 +1429,7 @@ app.post("/jeu3", function(req,res){
             console.log("Successfully added Flower answers")
           }
         });
-        setTimeout(delay, 2000);
+        setTimeout(delay, 1000);
         function delay()
           {res.render("jeu3",{imageFlowerT:foundUser.imageFlowerT});}
       }
@@ -1490,7 +1490,7 @@ app.post("/emotiontraining", function(req,res){
               console.log("successfully added Emotion answers");
             }
           });
-          setTimeout(delay, 2000);
+          setTimeout(delay, 1000);
           function delay()
             {res.render("emotiontraining",{pictureUrl:foundUser.pictureUrlS});}
         }
@@ -1542,7 +1542,7 @@ app.post("/jeu4", function(req,res){
             console.log("Successfully added Emotion answers")
           }
         });
-        setTimeout(delay, 2000);
+        setTimeout(delay, 1000);
         function delay()
           {res.render("jeu4",{pictureUrlT:foundUser.pictureUrlT});}
       }
@@ -1593,7 +1593,7 @@ app.post("/numbertraining", function(req,res){
           console.log("successfully added Number answers");
           }
         })
-        setTimeout(delay, 2000);
+        setTimeout(delay, 1000);
         function delay()
         {res.render("numbertraining", {number1: numbers[foundUser.nbTrainN].substring(0,1),
           number2: numbers[foundUser.nbTrainN].substring(1,2), message: message});}
@@ -1659,7 +1659,7 @@ app.post("/jeu5", function(req,res){
             console.log("Successfully added Number answers")
           }
         });
-        setTimeout(delay, 2000);
+        setTimeout(delay, 1000);
         function delay()
           {res.redirect("jeu5");}
       }
@@ -1738,7 +1738,7 @@ app.post("/jeu6", function(req,res){
             console.log("Successfully added Word answers")
           }
         });
-    setTimeout(delay, 2000);  
+    setTimeout(delay, 1000);  
     function delay()
       {res.redirect("jeu6");}
       }
