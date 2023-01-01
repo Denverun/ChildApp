@@ -1121,7 +1121,7 @@ app.post("/fishtraining", function(req,res){
               console.log("successfully added Stories answers");
             }
           }); 
-          setTimeout(delay, 2000);
+          setTimeout(delay, 500);
           function delay()
             {res.redirect("fishtraining");}
         }
@@ -1187,7 +1187,7 @@ app.post("/jeu1", function(req,res){
             console.log("Successfully added Fish answers")
           }
         });
-        setTimeout(delay, 2000);
+        setTimeout(delay, 500);
         function delay()
           {res.redirect("jeu1");}
       }
@@ -1309,7 +1309,7 @@ app.post("/jeu2", function(req,res){
             console.log("Successfully added Heart answers")
           }
         });
-        setTimeout(delay, 2000);
+        setTimeout(delay, 500);
         function delay()
           {res.render("jeu2", {imageHeartT:foundUser.imageHeartT});}
       }
@@ -1766,5 +1766,5 @@ app.listen(process.env.PORT, function() {
 /*
 app.listen(port, function() {
     console.log("Server has started successfully");
-  });*/
-
+  });
+*/
