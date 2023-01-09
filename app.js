@@ -5,7 +5,6 @@ const bodyParser = require("body-parser");  //permet ensuite d'utiliser req.body
 const ejs = require("ejs");
 const mongoose=require("mongoose");
 const session = require('express-session');
-//const session = require('cookie-session');
 const passport = require("passport");
 const passportLocalMongoose = require("passport-local-mongoose");
 
@@ -41,14 +40,13 @@ passport.deserializeUser(function(user, cb) {
 app.use(bodyParser.urlencoded({extended: true}));   //encoder les résultats
 app.use(express.static("public"));
 
-mongoUrl = "mongodb+srv://Jacques:3775214698@cluster0.gvqxroh.mongodb.net/?retryWrites=true&w=majority"
 app.use(session({
   secret: "Test1",
   name: "test111",
   //secret: "Test",
   resave: false,
   //name: "test",
-  store: MongoStore.create({mongoUrl : "mongodb+srv://Jacques:3775214698@cluster0.gvqxroh.mongodb.net/?retryWrites=true&w=majority"}),
+  store: MongoStore.create({mongoUrl : "mongodb+srv://test:Test2023@cluster0.gvqxroh.mongodb.net/?retryWrites=true&w=majority"}),
   cookie: {saveUninitialized: false,
     httpOnly: false,
     maxAge: 1000*1000*100000
@@ -58,9 +56,9 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 
-//mongoose.connect("mongodb+srv://Jacques:3775214698@cluster0.5smrs.mongodb.net/cluster0", {useCreateIndex: true, useNewUrlParser: true, useUnifiedTopology: true});
-mongoose.connect("mongodb+srv://Jacques:3775214698@cluster0.gvqxroh.mongodb.net/?retryWrites=true&w=majority", {useNewUrlParser: true, useUnifiedTopology: true});
-//mongoose.connect("mongodb+srv://Jacques:3775214698@cluster0.5smrs.mongodb.net/Cluster0", {useNewUrlParser: true, useUnifiedTopology: true});
+//mongoose.connect("mongodb+srv://test:Test2023@cluster0.5smrs.mongodb.net/cluster0", {useCreateIndex: true, useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect("mongodb+srv://test:Test2023@cluster0.gvqxroh.mongodb.net/?retryWrites=true&w=majority", {useNewUrlParser: true, useUnifiedTopology: true});
+//mongoose.connect("mongodb+srv://test:Test2023@cluster0.5smrs.mongodb.net/Cluster0", {useNewUrlParser: true, useUnifiedTopology: true});
 console.log('Connexion à MongoDB réussie !')
 
 
@@ -373,17 +371,7 @@ app.get("/strangestory", function(req,res){
       console.log(err);
     } else if(foundUser){
       if (foundUser.test==="done"){
-        //res.redirect("home")
         res.render("home", {startingContent: homeStartingContent, firstName:req.session.passport.user.firstName, text:"You have already done the strange stories test"});
-        /*User.findOne({email:req.session.passport.user.username}, function(err,found){
-          if (err) {
-            console.log(err);
-          } else if(found){
-            res.render("home", {startingContent: homeStartingContent, firstName:found.firstName, text:"You have already done the strange stories test"});
-          } else{
-            res.render("")
-          }
-        })*/
       }
       else{
         res.render("strangestory");
@@ -562,12 +550,12 @@ app.get("/flowergamestart",function(req,res){
   res.render("flowergamestart");
 })
 
-let imageFlower="L";
+
 app.get("/flowertraining",function(req,res){
   res.render("flowertraining", {imageFlower:"L"});
 })
 
-let imageFlowerT="R";
+
 app.get("/jeu3",function(req,res){
   res.render("jeu3", {imageFlowerT:"R"});
 })
@@ -1681,7 +1669,6 @@ app.post("/jeu5", function(req,res){
   });
 })
 
-
 app.post("/wordtraining", function(req,res){
   console.log(req.body.checkbox);
   if(req.body.checkbox===correctAnswer){
@@ -1739,7 +1726,7 @@ app.post("/jeu6", function(req,res){
             console.log("Successfully added Word answers")
           }
         });
-    setTimeout(delay, 1000);  
+    setTimeout(delay, 1000);
     function delay()
       {res.redirect("jeu6");}
       }

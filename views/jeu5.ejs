@@ -115,6 +115,7 @@
       function delay11() {
         document.getElementById("number").classList.remove("hide");
         document.querySelectorAll("button")[0].classList.remove("hide");
+        document.querySelectorAll("button")[0].addEventListener("click", function(){ document.querySelectorAll("button")[0].classList.add("hide"); });
       }
 
       // setTimeout(delay, 5000);
