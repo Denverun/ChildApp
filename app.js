@@ -61,8 +61,6 @@ app.use(passport.session());
 //mongoose.connect("mongodb+srv://Jacques:3775214698@cluster0.5smrs.mongodb.net/cluster0", {useCreateIndex: true, useNewUrlParser: true, useUnifiedTopology: true});
 mongoose.connect("mongodb+srv://Jacques:3775214698@cluster0.gvqxroh.mongodb.net/?retryWrites=true&w=majority", {useNewUrlParser: true, useUnifiedTopology: true});
 //mongoose.connect("mongodb+srv://Jacques:3775214698@cluster0.5smrs.mongodb.net/Cluster0", {useNewUrlParser: true, useUnifiedTopology: true});
-//mongoose.set("useCreateIndex", true);
-//mongoose.connect('mongodb://localhost:3000');
 console.log('Connexion à MongoDB réussie !')
 
 
@@ -95,7 +93,13 @@ const filmsSchema=new mongoose.Schema ({
   answer5: "",
   answer6: "",
   test:"",
-  pictureUrl:[]
+  pictureUrl:[],
+  fishR:"",
+  fishC:"",
+  imageC:"",
+  fishRT:"",
+  fishRC:"",
+  imageCT:""
 });
 
 const fishsSchema=new mongoose.Schema ({
@@ -777,7 +781,7 @@ app.get("/silentfilm5", function(req,res){
   res.render("silentfilm5");
 });
 
-//aquoicasert
+
 app.get("/final", function(req,res){
   res.render("final");
 });
@@ -943,7 +947,6 @@ app.post("/strangestory5", function(req,res){
 
 
 // Getting silent films answers
-//quequoi
 app.post("/silentfilm1", function(req,res){
   Film.findOne({email:req.session.passport.user.username},function(err, foundUser){
     if (err) {
@@ -1065,34 +1068,30 @@ app.post("/silentfilm5", function(req,res){
   });
 });
 
-
-let nbTrain=0;
-
 //0 left    1 right
-let fish=["01", "11","10", "01","00","11"];
+let fish=[ "11", "10", "01", "00", "11", "01"];
 
-//couper
 app.post("/fishtraining", function(req,res){
   console.log("game1 Training");
   Fish.findOne({email:req.session.passport.user.username},function(err, foundUser){
     if (err) {
       console.log(err);
     } else {
-        if(foundUser.nbTrain<6){
+      if(foundUser.nbTrain<6){
           if(fish[foundUser.nbTrain][0]==="0"){
-            fishC="gauche.PNG";
-            imageC="0";
+            foundUser.fishC="gauche.PNG";
+            foundUser.imageC="0";
           }
           else if(fish[foundUser.nbTrain][0]==="1"){
-            fishC="droite.PNG";
-            imageC="1";
+            foundUser.fishC="droite.PNG";
+            foundUser.imageC="1";
           }
       
           if(fish[foundUser.nbTrain][1]==="0"){
-            fishR="gauche.PNG";
+            foundUser.fishR="gauche.PNG";
           }
           else if(fish[foundUser.nbTrain][1]==="1"){
-            fishR="droite.PNG";
+            foundUser.fishR="droite.PNG";
           }
       
           if(req.body.leftTrue==="leftTrue"){
@@ -1118,17 +1117,17 @@ app.post("/fishtraining", function(req,res){
               print(err);
             }
             else{
-              console.log("successfully added Stories answers");
+              console.log("successfully added Fish answers");
             }
           }); 
           setTimeout(delay, 1000);
           function delay()
-            {res.redirect("fishtraining");}
+            {res.render("fishtraining", {fishR: foundUser.fishR, fishC:foundUser.fishC, imageC:foundUser.imageC});}
         }
         else {
           res.redirect("fishgamestart");
         }
-    }   
+    }
   });
 })
 
@@ -1146,18 +1145,18 @@ app.post("/jeu1", function(req,res){
     } else {
       if(foundUser.nb<34){
         if(fishT[foundUser.nb][0]==="0"){
-          fishCT="gauche.PNG";
-          imageCT="0";
+          foundUser.fishCT="gauche.PNG";
+          foundUser.imageCT="0";
         }
         else if(fishT[foundUser.nb][0]==="1"){
-          fishCT="droite.PNG";
-          imageCT="1";
+          foundUser.fishCT="droite.PNG";
+          foundUser.imageCT="1";
         }
         if(fishT[foundUser.nb][1]==="0"){
-          fishRT="gauche.PNG";
+          foundUser.fishRT="gauche.PNG";
         }
         else if(fishT[foundUser.nb][1]==="1"){
-          fishRT="droite.PNG";
+          foundUser.fishRT="droite.PNG";
         }
 
         if(req.body.leftTrue==="leftTrue"){
@@ -1189,7 +1188,7 @@ app.post("/jeu1", function(req,res){
         });
         setTimeout(delay, 1000);
         function delay()
-          {res.redirect("jeu1");}
+          {res.render("jeu1", {fishRT: foundUser.fishRT, fishCT:foundUser.fishCT, imageCT: foundUser.imageCT});}
       }
       else {
         console.log("Successfully finished");
@@ -1209,7 +1208,7 @@ app.post("/jeu1", function(req,res){
 })
 
 // L : Left   R : Right
-let heart=["L","L","R","L","R","R","L"];
+let heart=["L","L","R","L","R","R","L","R"];
 
 
 app.post("/hearttraining", function(req,res){
@@ -1218,7 +1217,7 @@ app.post("/hearttraining", function(req,res){
     if (err) {
       console.log(err);
     } else {
-        if(foundUser.nbTrainH<7){
+        if(foundUser.nbTrainH<9){
           if(heart[foundUser.nbTrainH]==="R"){
             foundUser.imageHeart="R";
           }
@@ -1265,7 +1264,7 @@ app.post("/hearttraining", function(req,res){
 
 
 
-let heartT=["L","L","R","R","L","R","R","L","L","L","R"];
+let heartT=["L","L","R","R","L","R","R","L","L","L","R","L"];
 
 app.post("/jeu2", function(req,res){
   console.log("game2");
@@ -1274,7 +1273,7 @@ app.post("/jeu2", function(req,res){
     if (err) {
       console.log(err);
     } else {
-      if(foundUser.nb2<11){
+      if(foundUser.nb2<12){
         if(heartT[foundUser.nb2]==="R"){
           foundUser.imageHeartT="R";
         }
@@ -1331,7 +1330,7 @@ app.post("/jeu2", function(req,res){
 })
 
 
-let flower=["L","R","L","L","R","R","L"];
+let flower=["L","R","L","L","R","R","L","R"];
 
 app.post("/flowertraining", function(req,res){
   console.log("game3 Training");
@@ -1339,7 +1338,7 @@ app.post("/flowertraining", function(req,res){
     if (err) {
       console.log(err);
     } else {
-      if(foundUser.nbTrainF<7){    
+      if(foundUser.nbTrainF<8){    
         if(flower[foundUser.nbTrainF]==="R"){
           foundUser.imageFlower="R";
         }
@@ -1386,7 +1385,7 @@ app.post("/flowertraining", function(req,res){
 
 
 
-let flowerT=["L","L","R","R","L","R","R","L","L","R","L"];
+let flowerT=["L","L","R","R","L","R","R","L","L","R","L","R"];
 
 app.post("/jeu3", function(req,res){
   console.log("game3");
@@ -1394,7 +1393,7 @@ app.post("/jeu3", function(req,res){
     if (err) {
       console.log(err);
     } else {
-      if(foundUser.nb3<11){
+      if(foundUser.nb3<12){
         if(flowerT[foundUser.nb3]==="R"){
           foundUser.imageFlowerT="R";
         }
@@ -1451,7 +1450,7 @@ app.post("/jeu3", function(req,res){
 })
 
 
-var images=["train2.png", "train3.png", "train4.png", "train5.png"];
+var images=["train2.png", "train3.png", "train4.png", "train5.png", "train1.png"];
 
 app.post("/emotiontraining", function(req,res){
   console.log("game4 Training");
@@ -1459,7 +1458,6 @@ app.post("/emotiontraining", function(req,res){
       if (err) {
         console.log(err);
       } else {
-        if(foundUser.nbTrainE<5){
           if(req.body.happy==="happy"){
             foundUser.trainingAnswers.push(req.body.happy);
           }
@@ -1490,9 +1488,11 @@ app.post("/emotiontraining", function(req,res){
               console.log("successfully added Emotion answers");
             }
           });
-          setTimeout(delay, 1000);
-          function delay()
-            {res.render("emotiontraining",{pictureUrl:foundUser.pictureUrlS});}
+        if(foundUser.nbTrainE<5){
+          //setTimeout(delay, 1000);
+          //function delay()
+          //  {res.render("emotiontraining",{pictureUrl:foundUser.pictureUrlS});}
+          res.render("emotiontraining",{pictureUrl:foundUser.pictureUrlS})
         }
         else{
           res.redirect("emotiongamestart");
@@ -1502,7 +1502,7 @@ app.post("/emotiontraining", function(req,res){
   })
 
 
-var imagesT=[ "test2.png", "test3.png", "test4.png", "test5.png","test6.png", "test7.png", "test8.png", "test9.png","test10.png", "test11.png", "test12.png", "test13.png","test14.png", "test15.png", "test16.png", "test17.png","test18.png", "test19.png", "test20.png", "test21.png","test22.png", "test23.png", "test24.png", "test25.png","test26.png", "test27.png", "test28.png", "test29.png","test30.png"];
+var imagesT=[ "test2.png", "test3.png", "test4.png", "test5.png","test6.png", "test7.png", "test8.png", "test9.png","test10.png", "test11.png", "test12.png", "test13.png","test14.png", "test15.png", "test16.png", "test17.png","test18.png", "test19.png", "test20.png", "test21.png","test22.png", "test23.png", "test24.png", "test25.png","test26.png", "test27.png", "test28.png", "test29.png","test30.png", "test2.png"];
 
 app.post("/jeu4", function(req,res){
   console.log("game4");
@@ -1510,7 +1510,6 @@ app.post("/jeu4", function(req,res){
     if (err) {
       console.log(err);
     } else {
-      if(foundUser.nb4<29){
         if(req.body.happy==="happy"){
           foundUser.answers.push(req.body.happy);
         }
@@ -1542,9 +1541,11 @@ app.post("/jeu4", function(req,res){
             console.log("Successfully added Emotion answers")
           }
         });
-        setTimeout(delay, 1000);
-        function delay()
-          {res.render("jeu4",{pictureUrlT:foundUser.pictureUrlT});}
+      if(foundUser.nb4<30){
+        //setTimeout(delay, 1000);
+        //function delay()
+        //  {res.render("jeu4",{pictureUrlT:foundUser.pictureUrlT});}
+        res.render("jeu4",{pictureUrlT:foundUser.pictureUrlT})
       }
       else {
         console.log("Successfully finished");
@@ -1564,14 +1565,14 @@ app.post("/jeu4", function(req,res){
 })
 
 
-var numbers=["82", "56", "93", "12"];
-var numbersInv=["28","65","39","21"];
+var numbers=["82", "56", "93", "12","23"];
+var numbersInv=["28","65","39","21","32"];
 let message="";
 
 app.post("/numbertraining", function(req,res){
   console.log("game5 Training");
     Number.findOne({email:req.session.passport.user.username},function(err, foundUser){
-      if(foundUser.nbTrainN<3){
+      if(foundUser.nbTrainN<4){
         if(req.body.number===numbersInv[foundUser.nbTrainN]){
           console.log("good job!");
           message="Correct answer! good job!";
@@ -1605,8 +1606,8 @@ app.post("/numbertraining", function(req,res){
 })
 
 
-var numbersT=["53", "475", "952", "6927","3948","75314","97852"];
-var numbersInvT=["13","35","574","259","7296","8493","41357","25879"];
+var numbersT=["53", "475", "952", "6927","3948","75314","97852","1"];
+var numbersInvT=["13","35","574","259","7296","8493","41357","25879","1"];
 
 app.post("/jeu5", function(req,res){
   console.log("game5");
@@ -1615,7 +1616,7 @@ app.post("/jeu5", function(req,res){
     if (err) {
       console.log(err);
     } else {
-      if(foundUser.nb5<7){
+      if(foundUser.nb5<8){
         if(numbersT[foundUser.nb5].length===2){
           number1T=numbersT[foundUser.nb5][0];
           number2T=numbersT[foundUser.nb5][1];
@@ -1693,14 +1694,14 @@ app.post("/wordtraining", function(req,res){
   res.redirect("wordgamestart");
 })
 
-let wordTable=["Damp","Rest","Cruel","Receive","Battle","Patch","Disturb","Blaze","Malaria","Fascinated","Liberty","Stubborn","Precise","Resemblance","Anonymous","Elevate","Task","Courteous","Prosper"];
-let option1Table=["Light","Cry","Clean","Walk","Stroll","Mend","Transfer","Kitchen","Basement","Ill-treated","Freedom","Steady","Natural","Memory","Applicable","Raise","Horn","Dreadful","Imagine"];
-let option2Table=["Sing","Sing","Green","Accept","Light","Watch","Skip","Coat","Fever","Modelled","Worry","Hopeful","Exact","Fondness","Magnificent","Move","Game","Proud","Propose"];
+let wordTable=["Damp","Rest","Cruel","Receive","Battle","Patch","Disturb","Blaze","Malaria","Fascinated","Liberty","Stubborn","Precise","Resemblance","Anonymous","Elevate","Task","Courteous","Prosper","Damp"];
+let option1Table=["Light","Cry","Clean","Walk","Stroll","Mend","Transfer","Kitchen","Basement","Ill-treated","Freedom","Steady","Natural","Memory","Applicable","Raise","Horn","Dreadful","Imagine","Light"];
+let option2Table=["Sing","Sing","Green","Accept","Light","Watch","Skip","Coat","Fever","Modelled","Worry","Hopeful","Exact","Fondness","Magnificent","Move","Game","Proud","Propose","Sing"];
 let option3Table=["Sweet","Go Away","Pretty","Believe","Snow","Hand","Lick","Glass","Theatre","Poisoned","Rich","Obstinate","Faulty","Assemble","Insulting","Revolve","Trap","Polite","Succeed"];
-let option4Table=["Taste","Taste","Found","Empty","Fight","Bang","Upset","Roof","Fruit","Charmed","Serviette","Hollow","Grand","Repose","Fictitious","Work","Jail","Short","Beseech"];
-let option5Table=["Wet","Run Up","Water","Money","Bowl","Switch","Doubt","Flare","Ocean","Frightened","Forest","Orderly","Stupid","Attendance","Nameless","Waver","Problem","Curtsey","Punish"];
-let option6Table=["Flag","Lie Down","Unkind","Drive","Last","Cook","Fire","Side","Tune","Copied","Cheerful","Slack","Small","Likeness","Untrue","Disperse","Job","Truthful","Trespass"];
-let correctAnswerTable=["Throw","Wet","Lie Down","Unkind","Accept","Fight","Mend","Upset","Flare","Fever","Charmed","Freedom","Obstinate","Exact","Likeness","Nameless","Raise","Game","Polite","Succeed"];
+let option4Table=["Taste","Taste","Found","Empty","Fight","Bang","Upset","Roof","Fruit","Charmed","Serviette","Hollow","Grand","Repose","Fictitious","Work","Jail","Short","Beseech","Taste"];
+let option5Table=["Wet","Run Up","Water","Money","Bowl","Switch","Doubt","Flare","Ocean","Frightened","Forest","Orderly","Stupid","Attendance","Nameless","Waver","Problem","Curtsey","Punish","Wet"];
+let option6Table=["Flag","Lie Down","Unkind","Drive","Last","Cook","Fire","Side","Tune","Copied","Cheerful","Slack","Small","Likeness","Untrue","Disperse","Job","Truthful","Trespass","Flag"];
+let correctAnswerTable=["Throw","Wet","Lie Down","Unkind","Accept","Fight","Mend","Upset","Flare","Fever","Charmed","Freedom","Obstinate","Exact","Likeness","Nameless","Raise","Game","Polite","Succeed","Wet"];
 
 app.post("/jeu6", function(req,res){
   console.log("game6");
@@ -1709,7 +1710,7 @@ app.post("/jeu6", function(req,res){
     if (err) {
       console.log(err);
     } else {
-      if(foundUser.nb6<19){
+      if(foundUser.nb6<20){
         console.log(req.body.checkbox);
         if(req.body.checkbox===correctAnswerTable[foundUser.nb6]){
           foundUser.answers.push(req.body.checkbox);
@@ -1759,11 +1760,13 @@ app.post("/jeu6", function(req,res){
   });
 })
 
+//Lancer serveur  https://tom-ef.herokuapp.com/
 
 app.listen(process.env.PORT, function() {
   console.log("Server has started successfully");
 });
 /*
+//Lancer serveur local http://localhost:3000/
 app.listen(port, function() {
     console.log("Server has started successfully");
   });
