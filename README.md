@@ -63,3 +63,5 @@ The website is deployed using heroku
 
 1. Create a new account on https://signup.heroku.com/login
 2. Install heroku and start using the heroku command from your command shell  --> "Heroku Node.js Documentation"  https://devcenter.heroku.com/articles/getting-started-with-nodejs
+
+Credit for README :  Yassinelar   github : https://github.com/yassinelar/child-s-cognitive-development-platform
