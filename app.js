@@ -7,7 +7,6 @@ const mongoose=require("mongoose");
 const session = require('express-session');
 const passport = require("passport");
 const passportLocalMongoose = require("passport-local-mongoose");
-
 const MongoStore = require('connect-mongo');
 
 const http = require('http');
@@ -41,24 +40,20 @@ app.use(bodyParser.urlencoded({extended: true}));   //encoder les résultats
 app.use(express.static("public"));
 
 app.use(session({
-  secret: "Test1",
+  secret: "Test1", //peut etre remplacé par n'importe quel char
   name: "test111",
-  //secret: "Test",
   resave: false,
-  //name: "test",
   store: MongoStore.create({mongoUrl : "mongodb+srv://test:Test2023@cluster0.gvqxroh.mongodb.net/?retryWrites=true&w=majority"}),
   cookie: {saveUninitialized: false,
     httpOnly: false,
-    maxAge: 1000*1000*100000
+    maxAge: 1000*1000*100000 //durée du cookie, à changer selon l'utilisation, cette durée peut faire l'affaire
     }
 }));
 app.use(passport.initialize());
 app.use(passport.session());
 
 
-//mongoose.connect("mongodb+srv://test:Test2023@cluster0.5smrs.mongodb.net/cluster0", {useCreateIndex: true, useNewUrlParser: true, useUnifiedTopology: true});
 mongoose.connect("mongodb+srv://test:Test2023@cluster0.gvqxroh.mongodb.net/?retryWrites=true&w=majority", {useNewUrlParser: true, useUnifiedTopology: true});
-//mongoose.connect("mongodb+srv://test:Test2023@cluster0.5smrs.mongodb.net/Cluster0", {useNewUrlParser: true, useUnifiedTopology: true});
 console.log('Connexion à MongoDB réussie !')
 
 
@@ -186,7 +181,6 @@ const Emotion =new mongoose.model("Emotion", emotionsSchema);
 const Number =new mongoose.model("Number", numbersSchema);
 
 const Word =new mongoose.model("Word", wordsSchema);
-
 
 
 passport.use(User.createStrategy());
@@ -355,7 +349,6 @@ app.get("/home", function(req,res){
 });
 
 
-
 app.get("/about", function(req,res){
   res.render("about", {aboutContent:aboutContent});
 });
@@ -444,24 +437,18 @@ app.get("/fishstart", function(req,res){
   })
 })
 
-let fishR="droite.PNG";
-let fishC="gauche.PNG";
-let imageC="0";
 
 app.get("/fishtraining",function(req,res){
-  res.render("fishtraining", {fishR: fishR, fishC:fishC, imageC:imageC});
+  res.render("fishtraining", {fishR:"droite.PNG", fishC:"gauche.PNG", imageC:"0"});
 })
 
 app.get("/fishgamestart",function(req,res){
   res.render("fishgamestart");
 })
 
-let fishRT="gauche.PNG";
-let fishCT="gauche.PNG";
-let imageCT="0";
 
 app.get("/jeu1",function(req,res){
-  res.render("jeu1", {fishRT: fishRT, fishCT:fishCT, imageCT:imageCT});
+  res.render("jeu1", {fishRT:"gauche.PNG", fishCT:"gauche.PNG", imageCT:"0"});
 })
 
 
@@ -496,9 +483,6 @@ app.get("/heartstart", function(req,res){
     }
   })
 })
-
-
-
 
 app.get("/hearttraining",function(req,res){
   res.render("hearttraining", {imageHeart:"R"});   
@@ -545,11 +529,9 @@ app.get("/flowerstart", function(req,res){
   });
 })
   
-
 app.get("/flowergamestart",function(req,res){
   res.render("flowergamestart");
 })
-
 
 app.get("/flowertraining",function(req,res){
   res.render("flowertraining", {imageFlower:"L"});
@@ -591,7 +573,6 @@ app.get("/emotionstart", function(req,res){
   });
 })
 
-
 app.get("/emotiontraining",function(req,res){
   res.render("emotiontraining", {pictureUrl:"train1.png"});
 })
@@ -600,14 +581,9 @@ app.get("/emotiongamestart", function(req,res){
   res.render("emotiongamestart");
 })
 
-
 app.get("/jeu4",function(req,res){
   res.render("jeu4", {pictureUrlT:"test1.png"});
 })
-
-
-var number1="8";
-var number2="2";
 
 
 app.get("/numberstart", function(req,res){
@@ -640,24 +616,16 @@ app.get("/numberstart", function(req,res){
   });
 })
 
-
 app.get("/numbertraining",function(req,res){
-  res.render("numbertraining", {number1:number1, number2:number2, message:""});
+  res.render("numbertraining", {number1:"8", number2:"2", message:""});
 })
 
 app.get("/numbergamestart", function(req,res){
   res.render("numbergamestart");
 })
 
-
-var number1T="3";
-var number2T="1";
-var number3T="";
-var number4T="";
-var number5T="";
-
 app.get("/jeu5",function(req,res){
-  res.render("jeu5", {number1T:number1T, number2T:number2T, number3T:number3T, number4T:number4T, number5T:number5T});
+  res.render("jeu5", {number1T:"3", number2T:"1", number3T:"", number4T:"", number5T:""});
 })
 
 
@@ -698,11 +666,13 @@ let option4="Dunce";
 let option5="Fruit";
 let option6="Step";
 let correctAnswer="Fruit";
+
 app.get("/wordtraining",function(req,res){
   res.render("wordtraining", {word:word, option1:option1, option2:option2, option3:option3, option4:option4, option5:option5, option6:option6});
 })
 
 let wordMessage="";
+
 app.get("/wordgamestart",function(req,res){
   res.render("wordgamestart", {wordMessage:wordMessage});
 })
@@ -715,6 +685,7 @@ let option4T="Roll";
 let option5T="Dive";
 let option6T="Pull";
 let correctAnswerT="Throw";
+
 app.get("/jeu6",function(req,res){
   res.render("jeu6",{wordT:wordT, option1T:option1T, option2T:option2T, option3T:option3T, option4T:option4T, option5T:option5T, option6T:option6T});
 })
@@ -747,7 +718,6 @@ app.get("/silentfilm", function(req,res){
   }
   });
 })
-
 
 app.get("/silentfilm1", function(req,res){
   res.render("silentfilm1");
@@ -823,6 +793,7 @@ app.post("/login", function(req, res){
 app.post("/home", function(req,res){
 });
 
+
 // Getting strange stories answers
 
 app.post("/strangestory1", function(req,res){
@@ -848,7 +819,6 @@ app.post("/strangestory1", function(req,res){
   });
 });
 
-
 app.post("/strangestory2", function(req,res){
   Story.findOne({email:req.session.passport.user.username},function(err, foundUser){
     if (err) {
@@ -868,7 +838,6 @@ app.post("/strangestory2", function(req,res){
     res.redirect("strangestory3");
   });
 });
-
 
 app.post("/strangestory3", function(req,res){
   Story.findOne({email:req.session.passport.user.username},function(err, foundUser){
@@ -890,7 +859,6 @@ app.post("/strangestory3", function(req,res){
   });
 });
 
-
 app.post("/strangestory4", function(req,res){
   Story.findOne({email:req.session.passport.user.username},function(err, foundUser){
     if (err) {
@@ -910,7 +878,6 @@ app.post("/strangestory4", function(req,res){
     res.redirect("strangestory5");
   });
 });
-
 
 app.post("/strangestory5", function(req,res){
   Story.findOne({email:req.session.passport.user.username},function(err, foundUser){
@@ -935,6 +902,7 @@ app.post("/strangestory5", function(req,res){
 
 
 // Getting silent films answers
+
 app.post("/silentfilm1", function(req,res){
   Film.findOne({email:req.session.passport.user.username},function(err, foundUser){
     if (err) {
@@ -971,7 +939,6 @@ app.post("/silentfilm1", function(req,res){
   });
 });
 
-
 app.post("/silentfilm2", function(req,res){
   Film.findOne({email:req.session.passport.user.username},function(err, foundUser){
     if (err) {
@@ -991,7 +958,6 @@ app.post("/silentfilm2", function(req,res){
     res.redirect("silentfilm3");
   });
 });
-
 
 app.post("/silentfilm3", function(req,res){
   Film.findOne({email:req.session.passport.user.username},function(err, foundUser){
@@ -1013,7 +979,6 @@ app.post("/silentfilm3", function(req,res){
   });
 });
 
-
 app.post("/silentfilm4", function(req,res){
   Film.findOne({email:req.session.passport.user.username},function(err, foundUser){
     if (err) {
@@ -1033,7 +998,6 @@ app.post("/silentfilm4", function(req,res){
     res.redirect("silentfilm5");
   });
 });
-
 
 app.post("/silentfilm5", function(req,res){
   Film.findOne({email:req.session.passport.user.username},function(err, foundUser){
@@ -1056,7 +1020,7 @@ app.post("/silentfilm5", function(req,res){
   });
 });
 
-//0 left    1 right
+//"10" : tête à droite au centre et têtes à gauche sur les côtés
 let fish=[ "11", "10", "01", "00", "11", "01"];
 
 app.post("/fishtraining", function(req,res){
@@ -1251,7 +1215,6 @@ app.post("/hearttraining", function(req,res){
 })
 
 
-
 let heartT=["L","L","R","R","L","R","R","L","L","L","R","L"];
 
 app.post("/jeu2", function(req,res){
@@ -1370,7 +1333,6 @@ app.post("/flowertraining", function(req,res){
     }
   });
 })
-
 
 
 let flowerT=["L","L","R","R","L","R","R","L","L","R","L","R"];
@@ -1669,6 +1631,7 @@ app.post("/jeu5", function(req,res){
   });
 })
 
+
 app.post("/wordtraining", function(req,res){
   console.log(req.body.checkbox);
   if(req.body.checkbox===correctAnswer){
@@ -1689,6 +1652,7 @@ let option4Table=["Taste","Taste","Found","Empty","Fight","Bang","Upset","Roof",
 let option5Table=["Wet","Run Up","Water","Money","Bowl","Switch","Doubt","Flare","Ocean","Frightened","Forest","Orderly","Stupid","Attendance","Nameless","Waver","Problem","Curtsey","Punish","Wet"];
 let option6Table=["Flag","Lie Down","Unkind","Drive","Last","Cook","Fire","Side","Tune","Copied","Cheerful","Slack","Small","Likeness","Untrue","Disperse","Job","Truthful","Trespass","Flag"];
 let correctAnswerTable=["Throw","Wet","Lie Down","Unkind","Accept","Fight","Mend","Upset","Flare","Fever","Charmed","Freedom","Obstinate","Exact","Likeness","Nameless","Raise","Game","Polite","Succeed","Wet"];
+
 
 app.post("/jeu6", function(req,res){
   console.log("game6");
