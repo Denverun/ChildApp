@@ -1612,9 +1612,9 @@ app.post("/jeu5", function(req,res){
         });
         setTimeout(delay, 1000);
         function delay()
-          {res.render("jeu5", {number1T: numbersT[foundUser.nbTrainN].substring(0,1),
-            number2T: numbersT[foundUser.nbTrainN].substring(1,2),number3T: numbersT[foundUser.nbTrainN].substring(2,3),
-            number4T: numbersT[foundUser.nbTrainN].substring(3,4),number5T: numbersT[foundUser.nbTrainN].substring(4,5)});}
+          {res.render("jeu5", {number1T: numbersT[foundUser.nb5].substring(0,1),
+            number2T: numbersT[foundUser.nb5].substring(1,2),number3T: numbersT[foundUser.nb5].substring(2,3),
+            number4T: numbersT[foundUser.nb5].substring(3,4),number5T: numbersT[foundUser.nb5].substring(4,5)});}
           
       }
       else {
