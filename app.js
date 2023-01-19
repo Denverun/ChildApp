@@ -1566,7 +1566,7 @@ app.post("/jeu5", function(req,res){
     if (err) {
       console.log(err);
     } else {
-      if(foundUser.nb5<8){
+      if(foundUser.nb5<7){
         if(numbersT[foundUser.nb5].length===2){
           number1T=numbersT[foundUser.nb5][0];
           number2T=numbersT[foundUser.nb5][1];
