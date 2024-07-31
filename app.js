@@ -43,7 +43,7 @@ app.use(session({
   secret: "Test1", //peut etre remplacé par n'importe quel char
   name: "test111",
   resave: false,
-  store: MongoStore.create({mongoUrl : "mongodb+srv://test:Test2023@cluster0.gvqxroh.mongodb.net/?retryWrites=true&w=majority"}),
+  store: MongoStore.create({mongoUrl : "mongodb+srv://name"}),
   cookie: {saveUninitialized: false,
     httpOnly: false,
     maxAge: 1000*1000*100000 //durée du cookie, à changer selon l'utilisation, cette durée peut faire l'affaire
@@ -53,7 +53,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 
-mongoose.connect("mongodb+srv://test:Test2023@cluster0.gvqxroh.mongodb.net/?retryWrites=true&w=majority", {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect("mongodb+srv://name", {useNewUrlParser: true, useUnifiedTopology: true});
 console.log('Connexion à MongoDB réussie !')
 
 
