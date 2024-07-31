@@ -40,8 +40,8 @@ app.use(bodyParser.urlencoded({extended: true}));   //encoder les résultats
 app.use(express.static("public"));
 
 app.use(session({
-  secret: "Test1", //peut etre remplacé par n'importe quel char
-  name: "test111",
+  secret: "name",
+  name: "name",
   resave: false,
   store: MongoStore.create({mongoUrl : "mongodb+srv://name"}),
   cookie: {saveUninitialized: false,
